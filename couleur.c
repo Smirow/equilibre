@@ -10,3 +10,7 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <ctype.h>
+
+void remplace(Matrix grille,int x,int y,int c){
+	grille[x][y]= c;
+}
