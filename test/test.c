@@ -49,7 +49,7 @@ int main(void) {
 
     /* add the tests to the suite */
     /* NOTE - ORDER IS IMPORTANT - MUST TEST fread() AFTER fprintf() */
-    if ((NULL == CU_add_test(pSuite, "test of fprintf()", test_initMatrix))) {
+    if ((NULL == CU_add_test(pSuite, "test of 1 == 1", test_initMatrix))) {
         CU_cleanup_registry();
         return CU_get_error();
    }
