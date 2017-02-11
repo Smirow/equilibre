@@ -1,39 +1,54 @@
 # ABOU ALI Magued, Février 2017
 
-APPLI = equilibre.out
-TEST = test.out
-SRCDIR = src
-SRCDIRTEST = test
-CSRC = $(SRCDIR)/main.c $(SRCDIR)/grille.c $(SRCDIR)/file.c
-CSRCTEST = $(SRCDIRTEST)/test.c
-HDIR = headers
-CHDR = $(HDIR)/grille.h $(HDIR)/file.h
-OBJDIR = obj
-COBJ = $(OBJDIR)/main.o $(OBJDIR)/grille.o $(OBJDIR)/file.o
-COBJTEST = $(OBJDIR)/test.o
 CC = gcc
-CFLAGS = -std=c99 -Wall -Wextra -I$(HOME)/local/include
-CFLAGSTEST = -L$(HOME)/local/lib -lcunit
+SRCDIR = src
+HDIR = headers
+OBJDIR = obj
+TESTDIR = test
+MKDIR = mkdir -p
 
-app: $(APPLI)
+APP = equilibre.out
+CSRC = $(SRCDIR)/main.c $(SRCDIR)/grille.c $(SRCDIR)/file.c
+CHDR = $(HDIR)/grille.h $(HDIR)/file.h
+COBJMAIN = $(OBJDIR)/main.o
+COBJ = $(OBJDIR)/grille.o $(OBJDIR)/file.o
+CFLAGS = -std=c99 -Wall -Wextra -I $(HOME)/local/include
 
-$(APPLI): $(COBJ)
-	$(CC) $(CFLAGS) -o $(APPLI) $(COBJ)
+TEST = test.out
+CSRCTEST = $(TESTDIR)/main.c $(TESTDIR)/$(SRCDIR)/grilleTest.c
+CHDRTEST = $(TESTDIR)/$(HDIR)/grilleTest.h
+COBJTEST = $(TESTDIR)/$(OBJDIR)/main.o $(TESTDIR)/$(OBJDIR)/grilleTest.o
+CFLAGSTEST = -L $(HOME)/local/lib -lcunit
 
-$(COBJ): $(CSRC) $(CHDR)
+
+app: $(APP)
+
+$(APP): $(COBJMAIN) $(COBJ)
+	$(CC) $(CFLAGS) -o $(APP) $(COBJMAIN) $(COBJ)
+
+$(COBJMAIN): $(CSRC) $(CHDR) $(OBJDIR)
 	$(CC) $(CFLAGS) -o $(OBJDIR)/main.o -c $(SRCDIR)/main.c
+
+$(COBJ): $(CSRC) $(CHDR) $(OBJDIR)
 	$(CC) $(CFLAGS) -o $(OBJDIR)/grille.o -c $(SRCDIR)/grille.c
 	$(CC) $(CFLAGS) -o $(OBJDIR)/file.o -c $(SRCDIR)/file.c
+
+$(OBJDIR):
+	$(MKDIR) $(OBJDIR)
 
 
 test: $(TEST)
 
-$(TEST): $(COBJTEST)
-	$(CC) $(CFLAGSTEST) -o $(TEST) $(COBJTEST)
+$(TEST): $(COBJTEST) $(COBJ)
+	$(CC) $(CFLAGSTEST) -o $(TEST) $(COBJTEST) $(COBJ)
 
-$(COBJTEST): $(CSRCTEST)
-	$(CC) $(CFLAGS) -o $(OBJDIR)/test.o -c $(SRCDIRTEST)/test.c
+$(COBJTEST): $(CSRCTEST) $(CHDRTEST) $(TESTDIR)/$(OBJDIR)
+	$(CC) $(CFLAGS) -o $(TESTDIR)/$(OBJDIR)/main.o -c $(TESTDIR)/main.c
+	$(CC) $(CFLAGS) -o $(TESTDIR)/$(OBJDIR)/grilleTest.o -c $(TESTDIR)/$(SRCDIR)/grilleTest.c
+
+$(TESTDIR)/$(OBJDIR):
+	$(MKDIR) $(TESTDIR)/$(OBJDIR)
 
 
 clean:
-	rm -rf *.out obj/*.o test/.temp.txt $(APPLI) $(TEST)
+	rm -rf *.out $(OBJDIR) $(TESTDIR)/$(OBJDIR) $(APP) $(TEST)
