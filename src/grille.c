@@ -58,7 +58,7 @@ void printMatrix(Matrix matrix, int size) {
 
 /**
  * \fn void randomMatrix(Matrix matrix, int size, int N)
- * \brief initialisation d'une matrice a partir de valeur aléatoire comprise entre 0 et N.
+ * \brief initialisation d'une matrice carrée à partir de valeurs aléatoires comprises entre 0 et N.
  *
  * \param matrix Matrix la matrice, size int à la taille de la matrice carrée, N le maximum..
  */
