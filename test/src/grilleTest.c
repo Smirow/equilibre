@@ -1,7 +1,7 @@
 #include "../../headers/file.h"
 #include "../../headers/grille.h"
 #include "../headers/grilleTest.h"
-#include <CUnit/CUnit.h>
+#include <CUnit/Basic.h>
 
 
 void test_initMatrix(void) {
