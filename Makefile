@@ -18,7 +18,7 @@ TEST = test.out
 CSRCTEST = $(TESTDIR)/main.c $(TESTDIR)/$(SRCDIR)/grilleTest.c
 CHDRTEST = $(TESTDIR)/$(HDIR)/grilleTest.h
 COBJTEST = $(TESTDIR)/$(OBJDIR)/main.o $(TESTDIR)/$(OBJDIR)/grilleTest.o
-CFLAGSTEST = -L $(HOME)/local/lib -lcunit
+CFLAGSTEST = -L $(HOME)/local/lib
 
 
 app: $(APP)
@@ -40,7 +40,7 @@ $(OBJDIR):
 test: $(TEST)
 
 $(TEST): $(COBJTEST) $(COBJ)
-	$(CC) $(CFLAGSTEST) -o $(TEST) $(COBJTEST) $(COBJ)
+	$(CC) $(CFLAGSTEST) -o $(TEST) $(COBJTEST) $(COBJ) -lcunit
 
 $(COBJTEST): $(CSRCTEST) $(CHDRTEST) $(TESTDIR)/$(OBJDIR)
 	$(CC) $(CFLAGS) -o $(TESTDIR)/$(OBJDIR)/main.o -c $(TESTDIR)/main.c
