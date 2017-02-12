@@ -1,7 +1,7 @@
 language: c
 compiler: gcc
 before_install:
-    - wget https://downloads.sourceforge.net/project/cunit/CUnit/2.1-3/CUnit-2.1-3.tar.bz2?r=&ts=1486887078&use_mirror=heanet
+    - wget https://downloads.sourceforge.net/project/cunit/CUnit/2.1-3/CUnit-2.1-3.tar.bz2
     - tar -xvjpf CUnit-2.1-3-src.tar.bz2
     - cd CUnit-2.1-3
     - ./configure --prefix=$TRAVIS_BUILD_DIR
