@@ -1,5 +1,5 @@
 #include "headers/grilleTest.h"
-#include <CUnit/Basic.h>
+#include <CUnit/CUnit.h>
 
 
 /* The suite init function.
