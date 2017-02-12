@@ -1,7 +1,18 @@
 language: c
+compiler: gcc
 before_install:
-    sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev
-before_script:
+    - wget https://downloads.sourceforge.net/project/cunit/CUnit/2.1-3/CUnit-2.1-3.tar.bz2?r=&ts=1486887078&use_mirror=heanet
+    - tar -xvjpf CUnit-2.1-3-src.tar.bz2
+    - cd CUnit-2.1-3
+    - ./configure --prefix=$TRAVIS_BUILD_DIR
+    - make
+    - make install
+    - export C_INCLUDE_PATH=$TRAVIS_BUILD_DIR/include:$C_INCLUDE_PATH
+    - export LIBRARY_PATH=$TRAVIS_BUILD_DIR/lib:$LIBRARY_PATH
+    - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/lib:$LD_LIBRARY_PATH
+    - cd ..
+    - cd c
+install:
     make test
 script:
     ./test.out
