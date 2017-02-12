@@ -1,6 +1,6 @@
 language: c
 before_install:
-    apt-get install libcunit1 libcunit1-doc libcunit1-dev
+    sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev
 before_script:
     make test
 script:
