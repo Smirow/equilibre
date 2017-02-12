@@ -32,7 +32,8 @@ int main(void) {
 
     /* add the tests to the suite */
     if ((NULL == CU_add_test(suite_grille, "test of initMatrix()", test_initMatrix)) ||
-    (NULL == CU_add_test(suite_grille, "test of randomMatrix()", test_randomMatrix))) {
+    (NULL == CU_add_test(suite_grille, "test of randomMatrix()", test_randomMatrix)) ||
+    (NULL == CU_add_test(suite_grille, "test of initFromFile()", test_initFromFile))) {
         CU_cleanup_registry();
         return CU_get_error();
    }

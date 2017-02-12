@@ -25,3 +25,7 @@ void test_randomMatrix(void) {
         }
     }
 }
+
+void test_initFromFile(void) {
+    CU_PASS("TODO");
+}
