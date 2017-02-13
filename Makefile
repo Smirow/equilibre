@@ -8,10 +8,10 @@ TESTDIR = test
 MKDIR = mkdir -p
 
 APP = equilibre.out
-CSRC = $(SRCDIR)/main.c $(SRCDIR)/grille.c $(SRCDIR)/file.c
-CHDR = $(HDIR)/grille.h $(HDIR)/file.h
+CSRC = $(SRCDIR)/main.c $(SRCDIR)/grille.c $(SRCDIR)/file.c $(SRCDIR)/couleur.c
+CHDR = $(HDIR)/grille.h $(HDIR)/file.h $(HDIR)/couleur.h
 COBJMAIN = $(OBJDIR)/main.o
-COBJ = $(OBJDIR)/grille.o $(OBJDIR)/file.o
+COBJ = $(OBJDIR)/grille.o $(OBJDIR)/file.o $(OBJDIR)/couleur.o
 CFLAGS = -std=c99 -Wall -Wextra -I $(HOME)/local/include
 
 TEST = test.out
@@ -32,6 +32,7 @@ $(COBJMAIN): $(CSRC) $(CHDR) $(OBJDIR)
 $(COBJ): $(CSRC) $(CHDR) $(OBJDIR)
 	$(CC) $(CFLAGS) -o $(OBJDIR)/grille.o -c $(SRCDIR)/grille.c
 	$(CC) $(CFLAGS) -o $(OBJDIR)/file.o -c $(SRCDIR)/file.c
+	$(CC) $(CFLAGS) -o $(OBJDIR)/couleur.o -c $(SRCDIR)/couleur.c
 
 $(OBJDIR):
 	$(MKDIR) $(OBJDIR)

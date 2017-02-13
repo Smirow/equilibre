@@ -1,8 +1,4 @@
-/*#include "couleur.h"*/
-#include "grille.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "../headers/couleur.h"
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -15,24 +11,6 @@ void remplace(Matrix grille,int x,int y,int c){
 	grille[x][y]= c;
 }
 
-/* PILE FIFO */
-
-typedef struct struct_coordonnees{
-	int x;
-	int y;
-}coordonnees;
-
-typedef struct struct_cellule{
-	coordonnees pos;
-	struct struct_cellule *suivant;
-}cellule;
-
-
-typedef struct struct_FIFO {
-	cellule *first;
-	cellule *last;
-	int taille;
-}FIFO;
 
 
 FIFO initFIFOVide(){
