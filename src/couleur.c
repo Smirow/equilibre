@@ -52,3 +52,16 @@ coordonnees depile(FIFO f){
 
 	return coord;
 }
+
+void affiche(FIFO *suite){
+  cellule *coord;
+  int i,x,y;
+  coord = suite->first;
+
+  for(i=0;i<suite->taille;++i){
+  	x = coord->pos.x;
+  	y = coord->pos.y;
+  	printf("[%d,%d] -> ", x , y);
+    coord = coord->suivant;
+  }
+}

@@ -27,5 +27,6 @@ extern FIFO initFIFOVide();
 extern int vide(FIFO f);
 extern void constructeur(coordonnees coord,FIFO f);
 extern coordonnees depile(FIFO f);
+extern void affiche(FIFO *suite);
 
 #endif

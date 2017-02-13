@@ -1,8 +1,12 @@
-#include "../headers/file.h"
-#include "../headers/grille.h"
+#include "../headers/couleur.h"
 
 int main(void) {
     srand(time(NULL));
+
+    FIFO f;
+    coordonnees c;
+    f = initFIFOVide();
+
     /*
     flux* f = openFile("test.txt");
 
@@ -12,4 +16,5 @@ int main(void) {
 
     close(f);
     */
+
 }
