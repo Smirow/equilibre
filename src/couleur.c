@@ -50,7 +50,7 @@ FIFO* initFIFOVide(){
 	return file;
 }
 
-int vide(FIFO *f){
+int emptyFIFO(FIFO *f){
 	if (f->taille == 0){
 		return 1;
 	}
@@ -64,7 +64,7 @@ void constructeur(coordonnees* coord,FIFO *f){
 	c = (cellule *)malloc(sizeof(cellule));
 	c->pos.x = coord->x;
 	c->pos.y = coord->y;
-	if (vide(f)){
+	if (emptyFIFO(f)){
 		f->first = c;		
 	}
 	else{
@@ -89,11 +89,61 @@ void affiche(FIFO *suite){
 	cellule *cel;
 	int i,x,y;
 	cel = suite->first;
-	for(i=0;i<suite->taille;++i){
+	for(i = 0; i < suite->taille; ++i){
 		x = cel->pos.x;
 		y = cel->pos.y;
 		printf("[%d,%d] -> ", x , y);
 		cel = cel->suivant;
 	}
 	printf("\n");
+}
+
+int changeCC(Matrix grille, int nextcolor, int size) {
+	int color = grille[0][0];
+	int x, y;
+	coordonnees* coord = initcoord();
+	coordonnees* coord2 = initcoord();
+	FIFO *f = initFIFOVide();
+	constructeur(coord, f);
+	grille[0][0] = nextcolor;
+	int ccsize = 1;
+	while(!emptyFIFO(f))
+	{
+		coord2 = defile(f);
+		x = coord2->x, y = coord2->y;
+		if(x > 0 && grille[x-1][y] == color)
+		{
+			modifcoord(x-1, y, coord);
+			constructeur(coord, f);
+			grille[x-1][y] = nextcolor;
+			++ccsize;
+		}
+		if(y > 0 && grille[x][y-1] == color)
+		{
+			modifcoord(x, y-1, coord);
+			constructeur(coord, f);
+			grille[x][y-1] = nextcolor;
+			++ccsize;
+		}
+		if(x < size-1 && grille[x+1][y] == color)
+		{
+			modifcoord(x+1, y, coord);
+			constructeur(coord, f);
+			grille[x+1][y] = nextcolor;
+			++ccsize;
+		}
+		if(y < size-1 && grille[x][y+1] == color)
+		{
+			modifcoord(x, y+1, coord);
+			constructeur(coord,f );
+			grille[x][y+1] = nextcolor;
+			++ccsize;
+		}
+	}
+	return ccsize;
+}
+
+int win(int ccsize, int size){
+	printf("CCSIZE : %d , SIZE² : %d\n", ccsize, size * size);
+	return(ccsize == size * size);
 }
