@@ -98,7 +98,7 @@ void affiche(FIFO *suite){
 	printf("\n");
 }
 
-int changeCC(Matrix grille, int nextcolor, int size) {
+void changeCC(Matrix grille, int nextcolor, int size) {
 	int color = grille[0][0];
 	int x, y;
 	coordonnees* coord = initcoord();
@@ -106,7 +106,6 @@ int changeCC(Matrix grille, int nextcolor, int size) {
 	FIFO *f = initFIFOVide();
 	constructeur(coord, f);
 	grille[0][0] = nextcolor;
-	int ccsize = 1;
 	while(!emptyFIFO(f))
 	{
 		coord2 = defile(f);
@@ -116,34 +115,39 @@ int changeCC(Matrix grille, int nextcolor, int size) {
 			modifcoord(x-1, y, coord);
 			constructeur(coord, f);
 			grille[x-1][y] = nextcolor;
-			++ccsize;
 		}
 		if(y > 0 && grille[x][y-1] == color)
 		{
 			modifcoord(x, y-1, coord);
 			constructeur(coord, f);
 			grille[x][y-1] = nextcolor;
-			++ccsize;
 		}
 		if(x < size-1 && grille[x+1][y] == color)
 		{
 			modifcoord(x+1, y, coord);
 			constructeur(coord, f);
 			grille[x+1][y] = nextcolor;
-			++ccsize;
 		}
 		if(y < size-1 && grille[x][y+1] == color)
 		{
 			modifcoord(x, y+1, coord);
 			constructeur(coord,f );
 			grille[x][y+1] = nextcolor;
-			++ccsize;
 		}
 	}
-	return ccsize;
 }
 
-int win(int ccsize, int size){
-	printf("CCSIZE : %d , SIZE² : %d\n", ccsize, size * size);
-	return(ccsize == size * size);
+int win(Matrix grille, int size){
+	int color=grille[0][0];
+	for(int i=0 ; i<size ; i++)
+	{
+		for(int j=0 ; j<size ; j++)
+		{
+			if(grille[i][j]!=color)
+			{
+				return 0;
+			}
+		}
+	}
+	return 1;
 }

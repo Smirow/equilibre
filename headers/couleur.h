@@ -19,7 +19,7 @@ extern coordonnees* defile(FIFO *f);
 extern void affiche(FIFO *suite);
 extern coordonnees* initcoord();
 extern void modifcoord(int x,int y,coordonnees* coord);
-extern int changeCC(Matrix grille, int nextcolor, int size);
-extern int win(int ccsize, int size);
+extern void changeCC(Matrix grille, int nextcolor, int size);
+extern int win(Matrix grille, int size);
 
 #endif

@@ -34,7 +34,8 @@ int main(void) {
 			printf("RENTRE UNE COULEUR STP :");	
 			scanf("%d", &tap);
 		}
-		boolwin = win(changeCC(M, tap, size), size);
+		changeCC(M, tap, size);
+		boolwin = win(M, size);
     	printMatrix(M, size);
 	}
 
