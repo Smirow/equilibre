@@ -30,7 +30,8 @@ Matrix initMatrix(int size) {
  * \fn void freeMatrix(Matrix matrix, int size)
  * \brief Libération de l'espace mémoire d'une matrice.
  *
- * \param matrix Matrix la matrice et size int à la taille de la matrice carrée.
+ * \param matrix Matrix la matrice
+ * \param size int à la taille de la matrice carrée.
  */
 void freeMatrix(Matrix matrix, int size) {
     for(int m = 0; m < size; m++) {
@@ -44,7 +45,8 @@ void freeMatrix(Matrix matrix, int size) {
  * \fn void printMatrix(Matrix matrix, int size)
  * \brief Affiche la matrice de taille carré. Fonction de test.
  *
- * \param matrix Matrix la matrice et size int à la taille de la matrice carrée.
+ * \param matrix Matrix la matrice s
+ * \param size int à la taille de la matrice carrée.
  */
 void printMatrix(Matrix matrix, int size) {
     for(int m = 0; m < size; m++) {
@@ -89,6 +91,7 @@ Matrix initFromFile(flux* f) {
                 matrix[m][n] = atoi(&strOne);
             }
         }
+        free(str);
     }
     rewind(f->f);
     return matrix;
