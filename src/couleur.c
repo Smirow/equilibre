@@ -8,41 +8,62 @@
 #include <ctype.h>
 
 
-struct struct_coordonnees{
-	int x;
-	int y;
-};
 
-struct struct_cellule{
-	coordonnees pos;
-	struct struct_cellule *suivant;
-};
-
-
-struct struct_FIFO {
-	cellule *first;
-	cellule *last;
-	int taille;
-};
-
-
-void remplace(Matrix grille,int x,int y,int c){
-	grille[x][y]= c;
+/**
+ * \fn void replace(Matrix grille,int x,int y,int c)
+ * \brief Remplace la couleur d'une cell
+ *
+ * \param Matrix matrix la grille
+ * \param int size la taille de la grille
+ * \param coordonnees* coord les coordonnees de la cellule
+ * \param int val la valeur souhaité de la cellule
+ */
+void replace(Matrix matrix, int size, coordonnees coord, int val) {
+	if ((coord.x >= 0) && (coord.x < size) && (coord.y >= 0) && (coord.y < size)) {
+		matrix[coord.x][coord.y] = val;
+	}
 }
 
-coordonnees* initcoord(){
-	coordonnees *coord = malloc(sizeof(coordonnees));
-	coord->x = 0;
-	coord->y = 0;
+/**
+ * \fn coordonnees* initcoord()
+ * \brief Initialisation d'une structure coordonnees
+ *
+ * \return coordonnees* coord
+
+ */
+coordonnees modifcoord(int x, int y){
+	coordonnees coord;
+	coord.x = x;
+	coord.y = y;
 	return coord;
 }
 
-void modifcoord(int x,int y,coordonnees* coord){
-	coord->x = x;
-	coord->y = y;
-}
 
-FIFO* initFIFOVide(){
+/**
+ * \fn void modifcoord(int x,int y,coordonnees* coord)
+ * \brief Modifie les coordonnees d'une structure coordonnees
+ *
+ * \param coordonnees* coord la structure coordonnees à traiter
+ * \param int x la coordonnees x
+ * \param int y la coordonnees y
+ */
+ /*
+void modifcoord(coordonnees coord, int x, int y) {
+	coord.x = x;
+	coord.y = y;
+
+}
+*/
+
+
+/**
+ * \fn FIFO* initFIFOVide()
+ * \brief Initialisation d'une structure FIFO
+ *
+ * \return FIFO* file NULL
+
+ */
+FIFO* initFIFOVide() {
 	FIFO *file = malloc(sizeof(FIFO));
 	file->first = NULL;
 	file->last = NULL;
@@ -50,7 +71,16 @@ FIFO* initFIFOVide(){
 	return file;
 }
 
-int emptyFIFO(FIFO *f){
+
+/**
+ * \fn int emptyFIFO(FIFO *f)
+ * \brief Verifie si la FIFO est vide
+ *
+ * \param FIFO *f la FIFO à traiter
+ * \return int 0 ou 1
+
+ */
+int emptyFIFO(FIFO *f) {
 	if (f->taille == 0){
 		return 1;
 	}
@@ -59,33 +89,71 @@ int emptyFIFO(FIFO *f){
 	}
 }
 
-void constructeur(coordonnees* coord,FIFO *f){
+
+/**
+ * \fn void constructeur(coordonnees* coord, FIFO *f)
+ * \brief Constructeur de FIFO
+ *
+ * \param FIFO *f la FIFO à traiter
+ * \parom coordonnees* coord les coordonnees à rajouter
+ */
+void constructeur(FIFO *f, coordonnees coord) {
 	cellule *c;
 	c = (cellule *)malloc(sizeof(cellule));
-	c->pos.x = coord->x;
-	c->pos.y = coord->y;
+	c->pos.x = coord.x;
+	c->pos.y = coord.y;
 	if (emptyFIFO(f)){
-		f->first = c;		
+		f->first = c;
 	}
-	else{
+	else {
 		f->last->suivant = c;
 	}
 	f->last = c;
 	f->taille++;
 }
 
-coordonnees* defile(FIFO *f){
-	coordonnees *coord = malloc(sizeof(coordonnees));
-	if (f->taille != 0){
-		coord->x = f->first->pos.x;
-		coord->y = f->first->pos.y;
-		f->first = f->first->suivant;
-		f->taille--;
+
+/**
+ * \fn freeFIFO(FIFO *f)
+ * \brief vide la FIFO
+ *
+ * \param FIFO *f la FIFO à traiter
+ */
+void freeFIFO(FIFO *f) {
+	while(!emptyFIFO(f)) {
+		defile(f);
 	}
-	return coord;
+	free(f);
 }
 
-void affiche(FIFO *suite){
+
+/**
+ * \fn coordonnees* defile(FIFO *f)
+ * \brief defile la FIFO
+ *
+ * \param FIFO *f la FIFO à traiter
+ * \return coordonnees* coord les coordonnees de la cellule depilée
+ */
+coordonnees defile(FIFO *f){
+	coordonnees coord = modifcoord(0, 0);
+ 	if (f->taille != 0){
+		cellule *c = f->first;
+		coord = modifcoord(f->first->pos.x, f->first->pos.y);
+ 		f->first = f->first->suivant;
+ 		f->taille--;
+		free(c);
+ 	}
+ 	return coord;
+ }
+
+
+/**
+ * \fn void affiche(FIFO *suite)
+ * \brief affiche la FIFO sur la sortie standard
+ *
+ * \param FIFO *f la FIFO à afficher
+ */
+void affiche(FIFO *suite) {
 	cellule *cel;
 	int i,x,y;
 	cel = suite->first;
@@ -98,53 +166,63 @@ void affiche(FIFO *suite){
 	printf("\n");
 }
 
+
+/**
+ * \fn void changeCC(Matrix grille, int nextcolor, int size)
+ * \brief Fonction du jeu, permet de modifier les couleur de la composante connexe
+ *
+ * \param Matrix grille la grille du jeu
+ * \param int nextcolor la couleur du tour actue
+ * \param int size la taille de la grille de jeu
+ */
 void changeCC(Matrix grille, int nextcolor, int size) {
 	int color = grille[0][0];
 	int x, y;
-	coordonnees* coord = initcoord();
-	coordonnees* coord2 = initcoord();
+	coordonnees coord = modifcoord(0, 0);
+	coordonnees coord2 = modifcoord(0, 0);
 	FIFO *f = initFIFOVide();
-	constructeur(coord, f);
+	constructeur(f, coord);
 	grille[0][0] = nextcolor;
-	while(!emptyFIFO(f))
-	{
+	while((!emptyFIFO(f)) && (color != nextcolor)) {
 		coord2 = defile(f);
-		x = coord2->x, y = coord2->y;
-		if(x > 0 && grille[x-1][y] == color)
-		{
-			modifcoord(x-1, y, coord);
-			constructeur(coord, f);
+		x = coord2.x, y = coord2.y;
+		if(x > 0 && grille[x-1][y] == color) {
+			coord = modifcoord(x-1, y);
+			constructeur(f, coord);
 			grille[x-1][y] = nextcolor;
 		}
-		if(y > 0 && grille[x][y-1] == color)
-		{
-			modifcoord(x, y-1, coord);
-			constructeur(coord, f);
+		if(y > 0 && grille[x][y-1] == color) {
+			coord = modifcoord(x, y-1);
+			constructeur(f, coord);
 			grille[x][y-1] = nextcolor;
 		}
-		if(x < size-1 && grille[x+1][y] == color)
-		{
-			modifcoord(x+1, y, coord);
-			constructeur(coord, f);
+		if(x < size-1 && grille[x+1][y] == color) {
+			coord = modifcoord(x+1, y);
+			constructeur(f, coord);
 			grille[x+1][y] = nextcolor;
 		}
-		if(y < size-1 && grille[x][y+1] == color)
-		{
-			modifcoord(x, y+1, coord);
-			constructeur(coord,f );
+		if(y < size-1 && grille[x][y+1] == color) {
+			coord = modifcoord(x, y+1);
+			constructeur(f, coord);
 			grille[x][y+1] = nextcolor;
 		}
 	}
+	freeFIFO(f);
 }
 
-int win(Matrix grille, int size){
-	int color=grille[0][0];
-	for(int i=0 ; i<size ; i++)
-	{
-		for(int j=0 ; j<size ; j++)
-		{
-			if(grille[i][j]!=color)
-			{
+/**
+ * \fn int win(Matrix grille, int size)
+ * \brief Fonction du jeu, permet de verifier si le joueur à gagné
+ *
+ * \param Matrix grille la grille du jeu
+ * \param int size la taille de la grille de jeu
+ * \return int 0 or 1
+ */
+int win(Matrix grille, int size) {
+	int color = grille[0][0];
+	for(int i = 0 ; i < size ; i++) {
+		for(int j = 0 ; j < size ; j++) {
+			if(grille[i][j] != color) {
 				return 0;
 			}
 		}
