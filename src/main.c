@@ -3,41 +3,38 @@
 int main(void) {
 	srand(time(NULL));
 
-	FIFO *f;
-	coordonnees* coord = initcoord();
-	f = initFIFOVide();
-	int boolwin=0;
-	/*for (int i = 0; i < 5; ++i)
-	{
-		modifcoord(i,i,coord);
-		constructeur(coord,f);    	
-	}
-	affiche(f);
-	coord = defile(f);
-	affiche(f);*/
+	/* Petit fixe pour valgrind */
+	int *hh = NULL;
+	hh = malloc(sizeof(int));
+	free(hh);
+	/* ----------- */
 
-    flux* file = openFile("test.txt");
+	int boolwin = 0;
 
-    int size = checkFileFormat(file);
-    Matrix M = initFromFile(file);
+    flux* fichier = openFile("test.txt");
+
+    int size = checkFileFormat(fichier);
+    Matrix M = initFromFile(fichier);
     printMatrix(M, size);
-    close(file);
 
-
-    int tap=1;
-	while(tap!=0 && !boolwin)
-	{
-		printf("RENTRE UNE COULEUR STP :");	
-		scanf("%d", &tap);
-		while(tap < 1 || tap > 7)
-		{
-			printf("RENTRE UNE COULEUR STP :");	
-			scanf("%d", &tap);
+	char *p, s[100];
+    int n;
+	printf("Entrez une couleur : ");
+    while (!boolwin && fgets(s, sizeof(s), stdin)) {
+        n = strtol(s, &p, 10);
+        if (p == s || *p != '\n') {
+            printf("Entrez un nombre.\n");
+        } else if(n >= 1 && n <= 7) {
+			changeCC(M, n, size);
+			boolwin = win(M, size);
+			printMatrix(M, size);
+		} else {
+			printf("Entrez un nombre entre 1 et 6.\n");
 		}
-		changeCC(M, tap, size);
-		boolwin = win(M, size);
-    	printMatrix(M, size);
-	}
+		printf("RENTRE UNE COULEUR STP : ");
+    }
 
+	freeMatrix(M, size);
+	close(fichier);
 	return 0;
 }
