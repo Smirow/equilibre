@@ -18,7 +18,7 @@ int BUFF_MAX = 200;
  * \return Un object de type flux*.
  */
 flux* openFile(char const* s) {
-    flux* r = malloc(sizeof *r);
+    flux* r = malloc(sizeof(*r));
     r->f = fopen(s, "r");
     if (!r->f) {
         fprintf(stderr,"impossible d'ouvrir fichier %s\n", s);
@@ -52,7 +52,7 @@ char* readALine(flux* f) {
     char* ret = fgets(buf, BUFF_MAX, f->f);
     if (ret) {
         char* end = strchr(buf, '\n');
-    if (end) *end = 0;
+        if (end) *end = 0;
     } else {
         free(buf);
     }
@@ -96,12 +96,14 @@ int checkFileFormat(flux* f) {
                 fprintf(stderr, "Impossible de lire le fichier ligne %d. \n", i);
                 exit(1);
             }
+            free(m);
         }
     }
     else  {
         fprintf(stderr, "Impossible de lire le fichier ligne 1.");
         exit(1);
     }
+    free(m);
     rewind(f->f);
     return len;
 }

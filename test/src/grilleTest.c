@@ -13,6 +13,7 @@ void test_initMatrix(void) {
             CU_ASSERT((sizeof(matrix[i][j]) == sizeof(int)) && (matrix[i][j] == 0));
         }
     }
+    freeMatrix(matrix, 3);
 }
 
 
@@ -24,6 +25,7 @@ void test_randomMatrix(void) {
             CU_ASSERT((matrix[i][j] >= 1) && (matrix[i][j] <= 10));
         }
     }
+    freeMatrix(matrix, 10);
 }
 
 void test_initFromFile(void) {
