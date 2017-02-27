@@ -20,8 +20,8 @@ typedef int **Matrix;
 /**
  * Prototypes
  */
-Matrix initMatrix(int);
-void freeMatrix(Matrix, int);
-void printMatrix(Matrix, int);
-void randomMatrix(Matrix, int, int);
-Matrix initFromFile(flux*);
+Matrix initMatrix(int size);
+void freeMatrix(Matrix matrix, int size);
+void printMatrix(Matrix matrix, int size);
+void randomMatrix(Matrix matrix, int size, int N);
+Matrix initFromFile(flux* f);
