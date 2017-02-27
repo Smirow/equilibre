@@ -15,9 +15,9 @@ COBJ = $(OBJDIR)/grille.o $(OBJDIR)/file.o $(OBJDIR)/couleur.o
 CFLAGS = -std=c99 -Wall -Wextra -I $(HOME)/local/include
 
 TEST = test.out
-CSRCTEST = $(TESTDIR)/main.c $(TESTDIR)/$(SRCDIR)/grilleTest.c
-CHDRTEST = $(TESTDIR)/$(HDIR)/grilleTest.h
-COBJTEST = $(TESTDIR)/$(OBJDIR)/main.o $(TESTDIR)/$(OBJDIR)/grilleTest.o
+CSRCTEST = $(TESTDIR)/main.c $(TESTDIR)/$(SRCDIR)/grilleTest.c $(TESTDIR)/$(SRCDIR)/couleurTest.c
+CHDRTEST = $(TESTDIR)/$(HDIR)/grilleTest.h $(TESTDIR)/$(HDIR)/couleurTest.h
+COBJTEST = $(TESTDIR)/$(OBJDIR)/main.o $(TESTDIR)/$(OBJDIR)/grilleTest.o $(TESTDIR)/$(OBJDIR)/couleurTest.o
 CFLAGSTEST = -L $(HOME)/local/lib
 
 
@@ -46,6 +46,7 @@ $(TEST): $(COBJTEST) $(COBJ)
 $(COBJTEST): $(CSRCTEST) $(CHDRTEST) $(TESTDIR)/$(OBJDIR)
 	$(CC) $(CFLAGS) -o $(TESTDIR)/$(OBJDIR)/main.o -c $(TESTDIR)/main.c
 	$(CC) $(CFLAGS) -o $(TESTDIR)/$(OBJDIR)/grilleTest.o -c $(TESTDIR)/$(SRCDIR)/grilleTest.c
+	$(CC) $(CFLAGS) -o $(TESTDIR)/$(OBJDIR)/couleurTest.o -c $(TESTDIR)/$(SRCDIR)/couleurTest.c
 
 $(TESTDIR)/$(OBJDIR):
 	$(MKDIR) $(TESTDIR)/$(OBJDIR)
