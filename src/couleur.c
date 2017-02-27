@@ -10,12 +10,12 @@
 
 
 /**
- * \fn void replace(Matrix grille,int x,int y,int c)
+ * \fn void replace(Matrix matrix, int size, coordonnees coord, int val)
  * \brief Remplace la couleur d'une cell
  *
  * \param Matrix matrix la grille
  * \param int size la taille de la grille
- * \param coordonnees* coord les coordonnees de la cellule
+ * \param coordonnees coord les coordonnees de la cellule
  * \param int val la valeur souhaité de la cellule
  */
 void replace(Matrix matrix, int size, coordonnees coord, int val) {
@@ -25,10 +25,10 @@ void replace(Matrix matrix, int size, coordonnees coord, int val) {
 }
 
 /**
- * \fn coordonnees* initcoord()
- * \brief Initialisation d'une structure coordonnees
+ * \fn coordonnees modifcoord(int x, int y)
+ * \brief Initialisation ou modification d'une structure coordonnees
  *
- * \return coordonnees* coord
+ * \return coordonnees coord
 
  */
 coordonnees modifcoord(int x, int y){
@@ -37,23 +37,6 @@ coordonnees modifcoord(int x, int y){
 	coord.y = y;
 	return coord;
 }
-
-
-/**
- * \fn void modifcoord(int x,int y,coordonnees* coord)
- * \brief Modifie les coordonnees d'une structure coordonnees
- *
- * \param coordonnees* coord la structure coordonnees à traiter
- * \param int x la coordonnees x
- * \param int y la coordonnees y
- */
- /*
-void modifcoord(coordonnees coord, int x, int y) {
-	coord.x = x;
-	coord.y = y;
-
-}
-*/
 
 
 /**
@@ -91,7 +74,7 @@ int emptyFIFO(FIFO *f) {
 
 
 /**
- * \fn void constructeur(coordonnees* coord, FIFO *f)
+ * \fn void constructeur(FIFO *f, coordonnees coord)
  * \brief Constructeur de FIFO
  *
  * \param FIFO *f la FIFO à traiter
