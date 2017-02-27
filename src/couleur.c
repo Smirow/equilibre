@@ -77,8 +77,8 @@ int emptyFIFO(FIFO *f) {
  * \fn void constructeur(FIFO *f, coordonnees coord)
  * \brief Constructeur de FIFO
  *
- * \param FIFO *f la FIFO à traiter
- * \parom coordonnees* coord les coordonnees à rajouter
+ * \param FIFO* f la FIFO à traiter
+ * \param coordonnees* coord les coordonnees à rajouter
  */
 void constructeur(FIFO *f, coordonnees coord) {
 	cellule *c;
@@ -100,7 +100,7 @@ void constructeur(FIFO *f, coordonnees coord) {
  * \fn freeFIFO(FIFO *f)
  * \brief vide la FIFO
  *
- * \param FIFO *f la FIFO à traiter
+ * \param FIFO* f la FIFO à traiter
  */
 void freeFIFO(FIFO *f) {
 	while(!emptyFIFO(f)) {
@@ -114,7 +114,7 @@ void freeFIFO(FIFO *f) {
  * \fn coordonnees* defile(FIFO *f)
  * \brief defile la FIFO
  *
- * \param FIFO *f la FIFO à traiter
+ * \param FIFO* f la FIFO à traiter
  * \return coordonnees* coord les coordonnees de la cellule depilée
  */
 coordonnees defile(FIFO *f){
@@ -134,7 +134,7 @@ coordonnees defile(FIFO *f){
  * \fn void affiche(FIFO *suite)
  * \brief affiche la FIFO sur la sortie standard
  *
- * \param FIFO *f la FIFO à afficher
+ * \param FIFO* f la FIFO à afficher
  */
 void affiche(FIFO *suite) {
 	cellule *cel;

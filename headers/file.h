@@ -5,6 +5,9 @@
  * \version 0.0.1
  * \date 10 fevrier 2017
  */
+
+#ifndef __FILE_H
+#define __FILE_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,3 +26,5 @@ void close(flux*);
 char* readALine(flux*);
 int endOfFile(flux*);
 int checkFileFormat(flux*);
+
+#endif

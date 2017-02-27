@@ -15,7 +15,7 @@ int BUFF_MAX = 200;
  * \brief Ouverture d'un fichier.
  *
  * \param char const* s correspondant au path du fichier.
- * \return Un object de type flux*.
+ * \return flux* Un object de type flux*.
  */
 flux* openFile(char const* s) {
     flux* r = malloc(sizeof(*r));
@@ -45,7 +45,7 @@ void close(flux* f) {
  * \brief Lecture d'une ligne sur le flux.
  *
  * \param flux* f correspondant au flux à lire..
- * \return La ligne char*.
+ * \return char* La ligne char*.
  */
 char* readALine(flux* f) {
     char* buf = malloc(BUFF_MAX);

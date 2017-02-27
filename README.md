@@ -1,6 +1,6 @@
 # Team Équilibre IPI2 [![Build Status](https://travis-ci.com/Smirow/equilibre.svg?token=e4iudyJx4ptdm1S88isC&branch=sprint-01)](https://travis-ci.com/Smirow/equilibre)
 
-## Getting Started 
+## Getting Started
 
 ```
 /* Install CUnit */
@@ -13,8 +13,12 @@ make
 ./equilibre.out
 
 /* Compile tests */
-make test // You can compile tests regardless of the app 
+make test // You can compile tests regardless of the app
 
 /* Run tests */
 ./test.out
+
+/* Create the Documentation */
+make doc // The documentation doc.pdf is generated in the root directory
+
 ```

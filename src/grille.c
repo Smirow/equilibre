@@ -13,8 +13,8 @@
  * \fn Matrix initMatrix(int size)
  * \brief Creation d'une matrice carrée de taille variable.
  *
- * \param size int correspondant a la taille de la matrice carrée.
- * \return Un object de type Matrix.
+ * \param int size  correspondant a la taille de la matrice carrée.
+ * \return Matrix Un object de type Matrix.
  */
 Matrix initMatrix(int size) {
     Matrix matrix;
@@ -30,8 +30,8 @@ Matrix initMatrix(int size) {
  * \fn void freeMatrix(Matrix matrix, int size)
  * \brief Libération de l'espace mémoire d'une matrice.
  *
- * \param matrix Matrix la matrice
- * \param size int à la taille de la matrice carrée.
+ * \param Matrix matrix la matrice
+ * \param int size à la taille de la matrice carrée.
  */
 void freeMatrix(Matrix matrix, int size) {
     for(int m = 0; m < size; m++) {
@@ -45,8 +45,8 @@ void freeMatrix(Matrix matrix, int size) {
  * \fn void printMatrix(Matrix matrix, int size)
  * \brief Affiche la matrice de taille carré. Fonction de test.
  *
- * \param matrix Matrix la matrice s
- * \param size int à la taille de la matrice carrée.
+ * \param Matrix matrix la matrice s
+ * \param int size à la taille de la matrice carrée.
  */
 void printMatrix(Matrix matrix, int size) {
     for(int m = 0; m < size; m++) {
@@ -62,9 +62,9 @@ void printMatrix(Matrix matrix, int size) {
  * \fn void randomMatrix(Matrix matrix, int size, int N)
  * \brief initialisation d'une matrice carrée à partir de valeurs aléatoires comprises entre 0 et N.
  *
- * \param matrix Matrix la matrice
- * \param size int la taille de la matrice carrée
- * \param N int le maximum
+ * \param Matrix matrix  la matrice
+ * \param int size  la taille de la matrice carrée
+ * \param int N le maximum
  */
 void randomMatrix(Matrix matrix, int size, int N) {
     for (int m = 0; m < size; m++) {
@@ -79,8 +79,8 @@ void randomMatrix(Matrix matrix, int size, int N) {
  * \fn Matrix initFromFile(flux* f)
  * \brief Creation d'une matrice carrée à partir d'un fichier.
  *
- * \param f flux* correspondant au flux du fichier.
- * \return Un object de type Matrix.
+ * \param flux* f correspondant au flux du fichier.
+ * \return Matrix Un object de type Matrix.
  */
 Matrix initFromFile(flux* f) {
     int size = checkFileFormat(f);

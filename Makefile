@@ -51,6 +51,11 @@ $(COBJTEST): $(CSRCTEST) $(CHDRTEST) $(TESTDIR)/$(OBJDIR)
 $(TESTDIR)/$(OBJDIR):
 	$(MKDIR) $(TESTDIR)/$(OBJDIR)
 
+doc:
+	doxygen .doxygen.conf
+	cd docs/latex && make
+	cp docs/latex/refman.pdf ./doc.pdf
+	rm -dr docs
 
 clean:
-	rm -rf *.out $(OBJDIR) $(TESTDIR)/$(OBJDIR) $(APP) $(TEST)
+	rm -rf *.out docs doc.pdf $(OBJDIR) $(TESTDIR)/$(OBJDIR) $(APP) $(TEST)
