@@ -152,10 +152,10 @@ void affiche(FIFO *suite) {
 
 /**
  * \fn void changeCC(Matrix grille, int nextcolor, int size)
- * \brief Fonction du jeu, permet de modifier les couleur de la composante connexe
+ * \brief Fonction du jeu, permet de modifier la couleur de la composante connexe
  *
  * \param Matrix grille la grille du jeu
- * \param int nextcolor la couleur du tour actue
+ * \param int nextcolor la couleur du tour actuelle
  * \param int size la taille de la grille de jeu
  */
 void changeCC(Matrix grille, int nextcolor, int size) {
@@ -195,7 +195,7 @@ void changeCC(Matrix grille, int nextcolor, int size) {
 
 /**
  * \fn int win(Matrix grille, int size)
- * \brief Fonction du jeu, permet de verifier si le joueur à gagné
+ * \brief Fonction du jeu, permet de verifier si le joueur a gagné
  *
  * \param Matrix grille la grille du jeu
  * \param int size la taille de la grille de jeu

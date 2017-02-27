@@ -21,4 +21,6 @@ make test // You can compile tests regardless of the app
 /* Create the Documentation */
 make doc // The documentation doc.pdf is generated in the root directory
 
+/* Clean */
+make clean
 ```
