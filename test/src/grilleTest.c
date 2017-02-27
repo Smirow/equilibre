@@ -27,5 +27,15 @@ void test_randomMatrix(void) {
 }
 
 void test_initFromFile(void) {
-    CU_PASS("TODO");
+    int test_1[3][3] = {{3, 5, 9}, {1, 5, 7}, {3, 8, 5}};
+
+	flux* f = openFile("test/ressources/grille_1.txt");
+    int size = checkFileFormat(f);
+    Matrix matrix = initFromFile(f);
+
+	for(int i = 0; i < size; i++) {
+		for(int j = 0; j < size; j++) {
+			CU_ASSERT(test_1[i][j] == matrix[i][j]);
+		}
+	}
 }
