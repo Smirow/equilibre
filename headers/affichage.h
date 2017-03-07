@@ -1,18 +1,11 @@
-/**
- * \file couleur.h
- * \brief Fonctionnalité S1.2 : Couleur
- * \author Team Équilibre
- * \version 0.0.1
- * \date 18 fevrier 2017
- *
- */
+#ifndef __AFFICHAGE_H
+#define __AFFICHAGE_H
+#include <SDL/SDL.h>
 
-#ifndef __COULEUR_H
-#define __COULEUR_H
 
+SDL_Surface* initSDLwindow();
 void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, int b);
 void fillScreen(SDL_Surface *ecran, int r, int g, int b);
 void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran);
-SDL_Surface* initSDLwindow();
 
 #endif
