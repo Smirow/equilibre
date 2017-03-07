@@ -11,8 +11,15 @@
 #include "../headers/grille.h"
 #include "../headers/affichage.h"
 
-int autoDraw=0;
 
+SDL_Surface* initSDLwindow(){
+    SDL_Init(SDL_INIT_VIDEO); //l'erreur vient de la maintenant
+    SDL_Surface* ecran=SDL_SetVideoMode(500, 600, 16, SDL_DOUBLEBUF|SDL_FULLSCREEN); //l'erreur venait de là
+    fillScreen(ecran, 30, 30, 30);
+	SDL_WM_SetCaption("Color Flood equilibre", NULL);
+
+	return ecran;
+}
 
 // px, py coordonnées haut, gauche du pixel
 void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, int b) {
@@ -33,33 +40,33 @@ void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran){
     int rectsize=500/size;
     for(int i=0 ; i<size ; i++)
     {
-	    for(int j=0 ; j<size ; j++)
-	    {
-	    	switch(mat[i][j])
-	    	{
-	    		case 1 :
-    				drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  255,  0,  0);
-	    			break;
-    			case 2 :
-    				drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  0,  255,  0);
-	    			break;    			
-	    		case 3 :
-    				drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  0,  0,  255);
-	    			break;
-	    		case 4:
-    				drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  255,  0,  255);
-	    			break;
-    			case 5 :
-    				drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  255,  255,  255);
-	    			break;
-	    		case 6 :
-    				drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  0,  255,  255);
-	    			break;
+        for(int j=0 ; j<size ; j++)
+        {
+            switch(mat[i][j])
+            {
+                case 1 :
+                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  255,  0,  0);
+                    break;
+                case 2 :
+                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  0,  255,  0);
+                    break;              
+                case 3 :
+                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  0,  0,  255);
+                    break;
+                case 4:
+                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  255,  0,  255);
+                    break;
+                case 5 :
+                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  255,  255,  255);
+                    break;
+                case 6 :
+                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  0,  255,  255);
+                    break;
                 default:
                     printf("error\n");
-	    	}
+            }
 
-	    }
+        }
     }
 
     
@@ -68,16 +75,3 @@ void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran){
 
 }
 
-
-
-
-
-
-SDL_Surface* initSDLwindow(){
-	SDL_Surface *ecran = NULL;
-	ecran=SDL_SetVideoMode(500, 600, 32, SDL_HWSURFACE);
-    fillScreen(ecran, 230,230,230);
-	SDL_WM_SetCaption("Color Flood equilibre", NULL);
-
-	return ecran;
-}
