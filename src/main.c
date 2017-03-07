@@ -43,7 +43,6 @@ int main(void) {
     int boolwin = 0;
     int maxCoups = 0;
 
-    flux* fichier = openFile("test.txt");
 
 
     int size;
@@ -102,7 +101,6 @@ int main(void) {
     }
 
 	freeMatrix(M, size);
-	close(fichier);
 	return 0;
 
 }
