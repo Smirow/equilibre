@@ -9,7 +9,8 @@
 #include <SDL/SDL.h>
 #include <ctype.h>
 
-
+#include "../headers/file.h"
+#include "../headers/grille.h"
 int autoDraw=0;
 
 
