@@ -45,8 +45,23 @@ int main(void) {
 
     flux* fichier = openFile("test.txt");
 
-    int size = checkFileFormat(fichier);
-    Matrix M = initFromFile(fichier);
+
+    int size;
+    int preSize = 0;
+    char *p1, s1[100];
+    printf("Entrez la taille de la grille: ");
+    fgets(s1, sizeof(s1), stdin);
+    preSize = strtol(s1, &p1, 10);
+    if(preSize >= 1) {
+		size = preSize;
+	}
+    else {
+        printf("Erreur, bye.\n");
+        exit(1);
+    }
+    Matrix M = initMatrix(size);
+    randomMatrix(M, size, 6);
+
 
     int preMax = 0;
     char *p, s[100];
