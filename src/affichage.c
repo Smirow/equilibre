@@ -1,6 +1,3 @@
-#include "../headers/file.h"
-#include "../headers/grille.h"
-#include "../headers/affichage.h"
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -9,6 +6,10 @@
 #include <fcntl.h>
 #include <SDL/SDL.h>
 #include <ctype.h>
+
+#include "../headers/file.h"
+#include "../headers/grille.h"
+#include "../headers/affichage.h"
 
 int autoDraw=0;
 
