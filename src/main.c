@@ -34,21 +34,37 @@ int getColor() {
 
 
 int main(void) {
-	srand(time(NULL));
+    srand(time(NULL));
+
 
     /* Petit fixe pour valgrind */
-	int *hh = NULL;
-	hh = malloc(sizeof(int));
-	free(hh);
-	/* ----------- */
+    int *hh = NULL;
+    hh = malloc(sizeof(int));
+    free(hh);
+    /* ----------- */
 
     int boolwin = 0;
     int maxCoups = 0;
 
-    flux* fichier = openFile("test.txt");
 
-    int size = checkFileFormat(fichier);
-    Matrix M = initFromFile(fichier);
+    int size;
+    int preSize = 0;
+    char *p1, s1[100];
+    printf("Entrez la taille de la grille: ");
+    fgets(s1, sizeof(s1), stdin);
+    preSize = strtol(s1, &p1, 10);
+    if(preSize >= 1) {
+        size = preSize;
+    }
+    else {
+        printf("Erreur, bye.\n");
+        exit(1);
+    }
+    Matrix M = initMatrix(size);
+    randomMatrix(M, size, 6);
+
+
+
 
     int preMax = 0;
     char *p, s[100];
@@ -56,40 +72,46 @@ int main(void) {
     fgets(s, sizeof(s), stdin);
     preMax = strtol(s, &p, 10);
     if(preMax >= 1) {
-		maxCoups = preMax;
-	}
+        maxCoups = preMax;
+    }
     else {
         printf("Erreur, bye.\n");
         exit(1);
     }
 
-    SDL_Surface* ecran=initSDLwindow();
-	
+
+
+    
     int n;
     int nbCoups = 0;
     printf("---------------------------------\n");
     printMatrix(M, size);
-	printf("Entrez une couleur: ");
+
+
+    SDL_Surface* ecran=initSDLwindow(); //erreur
+
+
+
+
+    printf("Entrez une couleur: ");
     while (!boolwin && nbCoups < maxCoups) {
         n = getColor();
         if(n >= 1 && n <= 7) {
             nbCoups++;
-			changeCC(M, n, size);
-		    boolwin = win(M, size);
+            changeCC(M, n, size);
+            boolwin = win(M, size);
             printf("Il vous reste %d coups.\n", maxCoups-nbCoups);
-			printMatrix(M, size);
-			printMatrixSDL(M, size, ecran);
-		}
-		else {
-		    printf("Entrez une couleur possible.\n");
-		}
+            printMatrix(M, size);
+        }
+        else {
+            printf("Entrez une couleur possible.\n");
+        }
         if (boolwin) printf("Vous avez gagné !\n");
         else if (nbCoups >= maxCoups) printf("Vous avez depassé le nombre max de coups...\n");
         else printf("Rentrez une couleur: ");
     }
 
-	freeMatrix(M, size);
-	close(fichier);
-	return 0;
+    freeMatrix(M, size);
+    return 0;
 
 }
