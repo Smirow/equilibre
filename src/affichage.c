@@ -13,12 +13,17 @@
 
 
 SDL_Surface* initSDLwindow(){
-    SDL_Init(SDL_INIT_VIDEO); //l'erreur vient de la maintenant
-    SDL_Surface* ecran=SDL_SetVideoMode(500, 600, 16, SDL_DOUBLEBUF|SDL_FULLSCREEN); //l'erreur venait de là
-    fillScreen(ecran, 30, 30, 30);
-	SDL_WM_SetCaption("Color Flood equilibre", NULL);
+    SDL_Surface *screen=SDL_SetVideoMode(500, 600, 32, SDL_HWSURFACE);
 
-	return ecran;
+    if(SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
+        fprintf( stderr, "Video initialization failed: %s\n", SDL_GetError( ) );
+        SDL_Quit();
+    }
+    
+    fillScreen(screen, 30, 30, 30);
+    SDL_WM_SetCaption("Color Flood equilibre", NULL);
+
+    return screen;
 }
 
 // px, py coordonnées haut, gauche du pixel
