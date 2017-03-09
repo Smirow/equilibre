@@ -28,7 +28,7 @@ SDL_Surface* initSDLwindow(int width, int height){
         fprintf( stderr, "Video initialization failed: %s\n", SDL_GetError( ) );
         SDL_Quit();
     }
-    SDL_Surface *screen = SDL_SetVideoMode(width, height, 32, SDL_HWSURFACE);
+    SDL_Surface *screen = SDL_SetVideoMode(width, height, 32, SDL_HWSURFACE | SDL_RESIZABLE);
 
     fillScreen(screen, 30, 30, 30);
     SDL_WM_SetCaption("Color Flood Equilibre", NULL);
@@ -52,34 +52,39 @@ void fillScreen(SDL_Surface *ecran, int r, int g, int b) {
     SDL_Flip(ecran);
 }
 
-void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark){    
-    int rectsize=ecran->w/size;
+void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark) { 
+    int sizeToConsider = ecran->w;
+    if (ecran->w > ecran->h) 
+        sizeToConsider = ecran->h;
+    int rectsize = sizeToConsider/size;
+    int offsetW = (ecran->w - sizeToConsider)/2;
+    int offsetH = (ecran->h - sizeToConsider)/2;
     for(int i = 0; i < size ; i++) {
         for(int j = 0; j < size ; j++) {
             switch(mat[i][j]) {
                 case 1 :
                     /* RED */
-                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 201-dark, 3-dark, 14-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 201-dark, 3-dark, 14-dark);
                     break;
                 case 2 :
                     /* GREEN */
-                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 77-dark, 142-dark, 11-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 77-dark, 142-dark, 11-dark);
                     break;              
                 case 3 :
                     /* YELLOW */
-                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 194-dark, 143-dark, 10-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 194-dark, 143-dark, 10-dark);
                     break;
                 case 4:
                     /* BLUE */
-                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 53-dark, 91-dark, 235-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 53-dark, 91-dark, 235-dark);
                     break;
                 case 5 :
                     /* MAGENTA */
-                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 116-dark, 76-dark, 112-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 116-dark, 76-dark, 112-dark);
                     break;
                 case 6 :
                     /* CYAN */
-                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 13-dark, 112-dark, 104-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 13-dark, 112-dark, 104-dark);
                     break;
                 default:
                     printf("error\n");
@@ -106,7 +111,16 @@ void printWin() {
 }
 
 int getValueMatrix(int x, int y, Matrix matrix, int size, SDL_Surface *ecran) {
-    if (x < ecran->h && y < ecran->w)
-        return matrix[y/(ecran->w/size)][x/(ecran->w/size)];
+    int sizeToConsider = ecran->w;
+    if (ecran->w > ecran->h) 
+        sizeToConsider = ecran->h;
+    int rectsize = sizeToConsider/size;
+    int offsetW = (ecran->w - sizeToConsider)/2;
+    int offsetH = (ecran->h - sizeToConsider)/2;
+    printf("Y: %d, X:%d\n", (y - offsetH)/rectsize, (x - offsetW)/rectsize);
+    if (x > (offsetW) && x < (ecran->w - offsetW) && y > (offsetH) && y < (ecran->h - offsetH)) {
+        printf("YES\n");
+        return matrix[(y - offsetH)/rectsize][(x - offsetW)/rectsize];
+    }
     return 0;
 }
