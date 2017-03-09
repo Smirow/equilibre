@@ -10,8 +10,7 @@
 
 #ifndef __GRILLE_H
 #define __GRILLE_H
-#include <time.h>
-#include <math.h>
+
 
 #define RED     "\x1b[31m"
 #define GREEN   "\x1b[32m"
