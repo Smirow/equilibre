@@ -1,6 +1,7 @@
-#include "../headers/couleur.h"
-#include "../headers/affichage.h"
+#include <stdlib.h>
+#include <stdio.h>
 #include <SDL/SDL.h>
+
 
 
 int getColor() {
@@ -33,85 +34,13 @@ int getColor() {
 }
 
 
-int main(void) {
-    srand(time(NULL));
-
-
-    /* Petit fixe pour valgrind */
-    int *hh = NULL;
-    hh = malloc(sizeof(int));
-    free(hh);
-    /* ----------- */
-
-    int boolwin = 0;
-    int maxCoups = 0;
-
-
-    int size;
-    int preSize = 0;
-    char *p1, s1[100];
-    printf("Entrez la taille de la grille: ");
-    fgets(s1, sizeof(s1), stdin);
-    preSize = strtol(s1, &p1, 10);
-    if(preSize >= 1) {
-        size = preSize;
-    }
-    else {
-        printf("Erreur, bye.\n");
-        exit(1);
-    }
-    Matrix M = initMatrix(size);
-    randomMatrix(M, size, 6);
-
-
-
-
-    int preMax = 0;
-    char *p, s[100];
-    printf("Entrez un nombre maximum de coups: ");
-    fgets(s, sizeof(s), stdin);
-    preMax = strtol(s, &p, 10);
-    if(preMax >= 1) {
-        maxCoups = preMax;
-    }
-    else {
-        printf("Erreur, bye.\n");
-        exit(1);
-    }
-
-
-
-    
-    int n;
-    int nbCoups = 0;
-    printf("---------------------------------\n");
-    printMatrix(M, size);
-
-
-    SDL_Surface* ecran=initSDLwindow(); //erreur
-
-
-
-
-    printf("Entrez une couleur: ");
-    while (!boolwin && nbCoups < maxCoups) {
-        n = getColor();
-        if(n >= 1 && n <= 7) {
-            nbCoups++;
-            changeCC(M, n, size);
-            boolwin = win(M, size);
-            printf("Il vous reste %d coups.\n", maxCoups-nbCoups);
-            printMatrix(M, size);
-        }
-        else {
-            printf("Entrez une couleur possible.\n");
-        }
-        if (boolwin) printf("Vous avez gagné !\n");
-        else if (nbCoups >= maxCoups) printf("Vous avez depassé le nombre max de coups...\n");
-        else printf("Rentrez une couleur: ");
-    }
-
-    freeMatrix(M, size);
-    return 0;
-
+int main(int argc, char *argv[])
+{
+    SDL_Init(SDL_INIT_VIDEO);
+ 
+    SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE);
+ 
+    SDL_Quit();
+ 
+    return EXIT_SUCCESS;
 }

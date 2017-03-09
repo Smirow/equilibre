@@ -1,6 +1,5 @@
 #ifndef __AFFICHAGE_H
 #define __AFFICHAGE_H
-#include <SDL/SDL.h>
 
 
 SDL_Surface* initSDLwindow();

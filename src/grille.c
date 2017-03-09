@@ -5,6 +5,11 @@
  * \version 0.0.1
  * \date 10 fevrier 2017
  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <math.h>
 #include "../headers/file.h"
 #include "../headers/grille.h"
 
