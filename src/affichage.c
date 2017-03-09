@@ -46,30 +46,30 @@ void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran){
     int rectsize=ecran->w/size;
     for(int i = 0; i < size ; i++) {
         for(int j = 0; j < size ; j++) {
-            switch(mat[j][i]) {
+            switch(mat[i][j]) {
                 case 1 :
                     /* RED */
-                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize, 201, 3, 14);
+                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 201, 3, 14);
                     break;
                 case 2 :
                     /* GREEN */
-                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize, 77, 142, 11);
+                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 77, 142, 11);
                     break;              
                 case 3 :
                     /* YELLOW */
-                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize, 194, 143, 10);
+                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 194, 143, 10);
                     break;
                 case 4:
                     /* BLUE */
-                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize, 53, 91, 235);
+                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 53, 91, 235);
                     break;
                 case 5 :
                     /* MAGENTA */
-                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize, 116, 76, 112);
+                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 116, 76, 112);
                     break;
                 case 6 :
                     /* CYAN */
-                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize, 13, 112, 104);
+                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 13, 112, 104);
                     break;
                 default:
                     printf("error\n");
