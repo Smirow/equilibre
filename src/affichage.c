@@ -51,34 +51,34 @@ void fillScreen(SDL_Surface *ecran, int r, int g, int b) {
     SDL_Flip(ecran);
 }
 
-void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran){    
+void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark){    
     int rectsize=ecran->w/size;
     for(int i = 0; i < size ; i++) {
         for(int j = 0; j < size ; j++) {
             switch(mat[i][j]) {
                 case 1 :
                     /* RED */
-                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 201, 3, 14);
+                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 201-dark, 3-dark, 14-dark);
                     break;
                 case 2 :
                     /* GREEN */
-                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 77, 142, 11);
+                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 77-dark, 142-dark, 11-dark);
                     break;              
                 case 3 :
                     /* YELLOW */
-                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 194, 143, 10);
+                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 194-dark, 143-dark, 10-dark);
                     break;
                 case 4:
                     /* BLUE */
-                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 53, 91, 235);
+                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 53-dark, 91-dark, 235-dark);
                     break;
                 case 5 :
                     /* MAGENTA */
-                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 116, 76, 112);
+                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 116-dark, 76-dark, 112-dark);
                     break;
                 case 6 :
                     /* CYAN */
-                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 13, 112, 104);
+                    drawRectangle(ecran,  j*rectsize,  i*rectsize, rectsize, 13-dark, 112-dark, 104-dark);
                     break;
                 default:
                     printf("error\n");
