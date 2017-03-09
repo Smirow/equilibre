@@ -28,7 +28,7 @@ SDL_Surface* initSDLwindow(int width, int height){
         fprintf( stderr, "Video initialization failed: %s\n", SDL_GetError( ) );
         SDL_Quit();
     }
-    SDL_Surface *screen=SDL_SetVideoMode(width, height, 32, SDL_HWSURFACE);
+    SDL_Surface *screen = SDL_SetVideoMode(width, height, 32, SDL_HWSURFACE);
 
     fillScreen(screen, 30, 30, 30);
     SDL_WM_SetCaption("Color Flood Equilibre", NULL);
