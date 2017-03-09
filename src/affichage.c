@@ -40,9 +40,10 @@ SDL_Surface* initSDLwindow(int width, int height){
 // px, py coordonnées haut, gauche du pixel
 void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, int b) {
     SDL_Rect rect;
-    rect.x=px;
-    rect.y=py;
-    rect.h=rect.w=size;
+    rect.x = px;
+    rect.y = py;
+    rect.h = size;
+    rect.w = size;
     SDL_FillRect(ecran, &rect, SDL_MapRGB(ecran->format, r, g, b));
 }
 
