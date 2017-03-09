@@ -6,39 +6,7 @@
 #include "../headers/couleur.h"
 #include "../headers/affichage.h"
 
-
-
-int getColor() {
-    char s[100];
-    fgets(s, sizeof(s), stdin);
-    int res = 0;
-    switch(s[0]) {
-        case 'R':
-            res = 1;
-            break;
-        case 'G':
-            res = 2;
-            break;
-        case 'Y':
-            res = 3;
-            break;
-        case 'B':
-            res = 4;
-            break;
-        case 'M':
-            res = 5;
-            break;
-        case 'C':
-            res = 6;
-            break;
-        default:
-            res = 0;
-    }
-    return res;
-}
-
-
-int main(int argc, char *argv[]) {
+int main() {
     srand(time(NULL));
 
     /* Petit fixe pour valgrind */
@@ -47,46 +15,55 @@ int main(int argc, char *argv[]) {
 	free(hh);
 	/* ----------- */
 
-    int size;
+    int PLAY = 1;
+    int size = 0;
     int boolwin = 0;
     int maxCoups = 0;
+    int nbCoups = 0;
 
 
-    int preSize = 0;
-    char *p1, s1[100];
-    printf("Entrez la taille de la grille: ");
-    fgets(s1, sizeof(s1), stdin);
-    preSize = strtol(s1, &p1, 10);
-    if(preSize >= 1) {
-		size = preSize;
-	}
-    else {
-        printf("Erreur, bye.\n");
-        exit(1);
+    size = getsValue("Entrez la taille de la grille: ", 1);
+    maxCoups = getsValue("Entrez un nombre maximum de coups: ", 1);
+
+    Matrix matrix = initMatrix(size);
+    randomMatrix(matrix, size, 6);
+
+    SDL_Surface *screen = initSDLwindow(600, 600);
+    printMatrixSDL(matrix, size, screen);
+
+    SDL_Event event;
+    char buf[100];
+    while (!boolwin && nbCoups < maxCoups && PLAY) {
+        sprintf(buf, "Color Flood Equilibre (%d coups restant)", maxCoups-nbCoups);
+        SDL_WM_SetCaption(buf, NULL);
+        int playing = 0;
+        SDL_WaitEvent(&event);
+        switch(event.type) {
+            case SDL_QUIT: PLAY = 0; break;
+            case SDL_MOUSEBUTTONUP:
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    if ((playing = getValueMatrix(event.button.x, event.button.y, matrix, size, screen))) {
+                        if (playing != matrix[0][0])
+                            nbCoups++;
+			            changeCC(matrix, playing, size);
+		                boolwin = win(matrix, size);
+                        printMatrixSDL(matrix, size, screen);
+                    }
+                }
+            break;
+        }
     }
-    Matrix M = initMatrix(size);
-    randomMatrix(M, size, 6);
 
-
-    int preMax = 0;
-    char *p, s[100];
-    printf("Entrez un nombre maximum de coups: ");
-    fgets(s, sizeof(s), stdin);
-    preMax = strtol(s, &p, 10);
-    if(preMax >= 1) {
-		maxCoups = preMax;
-	}
-    else {
-        printf("Erreur, bye.\n");
-        exit(1);
+    if (boolwin) {
+        SDL_WM_SetCaption("Color Flood Equilibre (partie gagnée)", NULL);
+        printf("Partie Gagnée !\n");
+        printWin();
+    }
+    else if (nbCoups >= maxCoups) {
+        SDL_WM_SetCaption("Color Flood Equilibre (max coups atteint)", NULL);
+        printf("Partie terminée, max coups atteint.\n");
+        printWin();
     }
 
-
-    SDL_Init(SDL_INIT_VIDEO);
- 
-    SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE);
- 
-    SDL_Quit();
- 
     return EXIT_SUCCESS;
 }

@@ -1,17 +1,26 @@
 #include <string.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
-#include <signal.h>
-#include <fcntl.h>
+#include <unistd.h>
 #include <SDL/SDL.h>
-#include <ctype.h>
 
 #include "../headers/file.h"
 #include "../headers/grille.h"
 #include "../headers/affichage.h"
 
 
+int getsValue(char* str, int min) {
+    int res = 0;
+    char *p1, s1[100];
+    while (1) {
+        printf("%s", str);
+        if (!fgets(s1, sizeof(s1), stdin))
+        perror("Error fgets");
+        res = strtol(s1, &p1, 10);
+        if  (res >= min) {
+            return res;
+        }
+        printf("Wrong input, please retry.\n");
+    }
+}
 
 SDL_Surface* initSDLwindow(int width, int height){
 
@@ -79,3 +88,24 @@ void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran){
     SDL_Flip(ecran);
 }
 
+void printWin() {
+    SDL_Event event;
+    int quit = 1;
+    while(quit) {
+        SDL_WaitEvent(&event);
+        switch(event.type) {
+            case SDL_QUIT: 
+                quit = 0; 
+                break;
+            case SDL_MOUSEBUTTONUP: 
+                quit = 0; 
+                break;
+        }
+    }
+}
+
+int getValueMatrix(int x, int y, Matrix matrix, int size, SDL_Surface *ecran) {
+    if (x < ecran->h && y < ecran->w)
+        return matrix[y/(ecran->w/size)][x/(ecran->w/size)];
+    return 0;
+}
