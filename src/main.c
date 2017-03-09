@@ -66,6 +66,9 @@ int main() {
         printf("Partie terminée, max coups atteint.\n");
         printWin();
     }
-
+    
+    free(matrix);
+    SDL_FreeSurface(screen);
+    SDL_Quit();
     return EXIT_SUCCESS;
 }
