@@ -40,6 +40,10 @@ int main() {
         SDL_WaitEvent(&event);
         switch(event.type) {
             case SDL_QUIT: PLAY = 0; break;
+            case SDL_VIDEORESIZE:
+                screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 32, SDL_HWSURFACE | SDL_RESIZABLE);
+                printMatrixSDL(matrix, size, screen, 0); 
+                break;
             case SDL_MOUSEBUTTONUP:
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     if ((playing = getValueMatrix(event.button.x, event.button.y, matrix, size, screen))) {
@@ -50,7 +54,7 @@ int main() {
                         printMatrixSDL(matrix, size, screen, 0);
                     }
                 }
-            break;
+                break;
         }
     }
 
