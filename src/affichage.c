@@ -53,6 +53,7 @@ void fillScreen(SDL_Surface *ecran, int r, int g, int b) {
 }
 
 void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark) { 
+    fillScreen(ecran, 30, 30, 30);
     int sizeToConsider = ecran->w;
     if (ecran->w > ecran->h) 
         sizeToConsider = ecran->h;
@@ -117,9 +118,7 @@ int getValueMatrix(int x, int y, Matrix matrix, int size, SDL_Surface *ecran) {
     int rectsize = sizeToConsider/size;
     int offsetW = (ecran->w - sizeToConsider)/2;
     int offsetH = (ecran->h - sizeToConsider)/2;
-    printf("Y: %d, X:%d\n", (y - offsetH)/rectsize, (x - offsetW)/rectsize);
     if (x > (offsetW) && x < (ecran->w - offsetW) && y > (offsetH) && y < (ecran->h - offsetH)) {
-        printf("YES\n");
         return matrix[(y - offsetH)/rectsize][(x - offsetW)/rectsize];
     }
     return 0;
