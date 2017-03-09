@@ -55,11 +55,12 @@ void fillScreen(SDL_Surface *ecran, int r, int g, int b) {
 void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark) { 
     fillScreen(ecran, 30, 30, 30);
     int sizeToConsider = ecran->w;
-    if (ecran->w > ecran->h) 
+    if (ecran->w > ecran->h)
         sizeToConsider = ecran->h;
     int rectsize = sizeToConsider/size;
-    int offsetW = (ecran->w - sizeToConsider)/2;
-    int offsetH = (ecran->h - sizeToConsider)/2;
+    int offset = (sizeToConsider%size)/2;
+    int offsetW = (ecran->w - sizeToConsider)/2 + offset;
+    int offsetH = (ecran->h - sizeToConsider)/2 + offset;
     for(int i = 0; i < size ; i++) {
         for(int j = 0; j < size ; j++) {
             switch(mat[i][j]) {
@@ -116,8 +117,9 @@ int getValueMatrix(int x, int y, Matrix matrix, int size, SDL_Surface *ecran) {
     if (ecran->w > ecran->h) 
         sizeToConsider = ecran->h;
     int rectsize = sizeToConsider/size;
-    int offsetW = (ecran->w - sizeToConsider)/2;
-    int offsetH = (ecran->h - sizeToConsider)/2;
+    int offset = (sizeToConsider%size)/2;
+    int offsetW = (ecran->w - sizeToConsider)/2 + offset;
+    int offsetH = (ecran->h - sizeToConsider)/2 + offset;
     if (x > (offsetW) && x < (ecran->w - offsetW) && y > (offsetH) && y < (ecran->h - offsetH)) {
         return matrix[(y - offsetH)/rectsize][(x - offsetW)/rectsize];
     }
