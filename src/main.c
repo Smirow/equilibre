@@ -28,7 +28,7 @@ int main() {
     Matrix matrix = initMatrix(size);
     randomMatrix(matrix, size, 6);
 
-    SDL_Surface *screen = initSDLwindow(600, 600);
+    SDL_Surface *screen = initSDLwindow(504, 504);
     printMatrixSDL(matrix, size, screen, 0);
     
 
