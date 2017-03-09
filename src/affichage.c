@@ -13,7 +13,7 @@ int getsValue(char* str, int min) {
     while (1) {
         printf("%s", str);
         if (!fgets(s1, sizeof(s1), stdin))
-        perror("Error fgets");
+            perror("Error fgets");
         res = strtol(s1, &p1, 10);
         if  (res >= min) {
             return res;
