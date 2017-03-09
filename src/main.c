@@ -29,7 +29,7 @@ int main() {
     randomMatrix(matrix, size, 6);
 
     SDL_Surface *screen = initSDLwindow(600, 600);
-    printMatrixSDL(matrix, size, screen);
+    printMatrixSDL(matrix, size, screen, 0);
 
     SDL_Event event;
     char buf[100];
@@ -47,7 +47,7 @@ int main() {
                             nbCoups++;
 			            changeCC(matrix, playing, size);
 		                boolwin = win(matrix, size);
-                        printMatrixSDL(matrix, size, screen);
+                        printMatrixSDL(matrix, size, screen, 0);
                     }
                 }
             break;
@@ -55,11 +55,13 @@ int main() {
     }
 
     if (boolwin) {
+        printMatrixSDL(matrix, size, screen, 0);
         SDL_WM_SetCaption("Color Flood Equilibre (partie gagnée)", NULL);
         printf("Partie Gagnée !\n");
         printWin();
     }
     else if (nbCoups >= maxCoups) {
+        printMatrixSDL(matrix, size, screen, 10);
         SDL_WM_SetCaption("Color Flood Equilibre (max coups atteint)", NULL);
         printf("Partie terminée, max coups atteint.\n");
         printWin();
