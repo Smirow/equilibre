@@ -19,7 +19,7 @@ typedef struct flux {
 } flux;
 
 flux* openFile(char const*);
-void close(flux*);
+void closeFile(flux*);
 char* readALine(flux*);
 int endOfFile(flux*);
 int checkFileFormat(flux*);
