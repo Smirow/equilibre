@@ -12,16 +12,18 @@
 #include "../headers/affichage.h"
 
 
-SDL_Surface* initSDLwindow(){
-    SDL_Surface *screen=SDL_SetVideoMode(500, 600, 32, SDL_HWSURFACE);
+
+SDL_Surface* initSDLwindow(int width, int height){
 
     if(SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
         fprintf( stderr, "Video initialization failed: %s\n", SDL_GetError( ) );
         SDL_Quit();
     }
-    
+    SDL_Surface *screen=SDL_SetVideoMode(width, height, 32, SDL_HWSURFACE);
+
     fillScreen(screen, 30, 30, 30);
-    SDL_WM_SetCaption("Color Flood equilibre", NULL);
+    SDL_WM_SetCaption("Color Flood Equilibre", NULL);
+
 
     return screen;
 }
@@ -33,7 +35,6 @@ void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, i
     rect.y=py;
     rect.h=rect.w=size;
     SDL_FillRect(ecran, &rect, SDL_MapRGB(ecran->format, r, g, b));
-    SDL_Flip(ecran);
 }
 
 void fillScreen(SDL_Surface *ecran, int r, int g, int b) {
@@ -42,41 +43,39 @@ void fillScreen(SDL_Surface *ecran, int r, int g, int b) {
 }
 
 void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran){    
-    int rectsize=500/size;
-    for(int i=0 ; i<size ; i++)
-    {
-        for(int j=0 ; j<size ; j++)
-        {
-            switch(mat[i][j])
-            {
+    int rectsize=ecran->w/size;
+    for(int i = 0; i < size ; i++) {
+        for(int j = 0; j < size ; j++) {
+            switch(mat[j][i]) {
                 case 1 :
-                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  255,  0,  0);
+                    /* RED */
+                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize, 201, 3, 14);
                     break;
                 case 2 :
-                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  0,  255,  0);
+                    /* GREEN */
+                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize, 77, 142, 11);
                     break;              
                 case 3 :
-                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  0,  0,  255);
+                    /* YELLOW */
+                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize, 194, 143, 10);
                     break;
                 case 4:
-                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  255,  0,  255);
+                    /* BLUE */
+                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize, 53, 91, 235);
                     break;
                 case 5 :
-                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  255,  255,  255);
+                    /* MAGENTA */
+                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize, 116, 76, 112);
                     break;
                 case 6 :
-                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize,  0,  255,  255);
+                    /* CYAN */
+                    drawRectangle(ecran,  i*rectsize,  j*rectsize, rectsize, 13, 112, 104);
                     break;
                 default:
                     printf("error\n");
             }
-
         }
     }
-
-    
-    
-   
-
+    SDL_Flip(ecran);
 }
 

@@ -1,6 +1,6 @@
 # ABOU ALI Magued, Février 2017
 
-CC = gcc
+CC = gcc -O3
 SRCDIR = src
 HDIR = headers
 OBJDIR = obj
