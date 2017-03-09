@@ -30,13 +30,17 @@ int main() {
 
     SDL_Surface *screen = initSDLwindow(600, 600);
     printMatrixSDL(matrix, size, screen, 0);
+    
 
     SDL_Event event;
     char buf[100];
     while (!boolwin && nbCoups < maxCoups && PLAY) {
-        sprintf(buf, "Color Flood Equilibre (%d coups restant)", maxCoups-nbCoups);
-        SDL_WM_SetCaption(buf, NULL);
         int playing = 0;
+        sprintf(buf, "Color Flood Equilibre (%d coups restant)", maxCoups - nbCoups);
+        SDL_WM_SetCaption(buf, NULL);
+        /* Fixe for Mac */
+        if (nbCoups == 0) 
+            SDL_Flip(screen);
         SDL_WaitEvent(&event);
         switch(event.type) {
             case SDL_QUIT: PLAY = 0; break;
