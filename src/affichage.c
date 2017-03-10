@@ -78,7 +78,7 @@ void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark) {
                     break;
                 case 4:
                     /* BLUE */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 53-dark, 91-dark, 235-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 45-dark, 85-dark, 220-dark);
                     break;
                 case 5 :
                     /* MAGENTA */
@@ -86,7 +86,7 @@ void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark) {
                     break;
                 case 6 :
                     /* CYAN */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 13-dark, 112-dark, 104-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 13-dark, 150-dark, 150-dark);
                     break;
                 default:
                     printf("error\n");
