@@ -69,7 +69,7 @@ int main() {
         printWin();
     }
     else if (nbCoups >= maxCoups) {
-        printMatrixSDL(matrix, size, screen, 10);
+        printMatrixSDL(matrix, size, screen, 128);
         SDL_WM_SetCaption("Color Flood Equilibre (max coups atteint)", NULL);
         printf("Partie terminée, max coups atteint.\n");
         printWin();
