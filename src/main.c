@@ -20,13 +20,16 @@ int main() {
     int boolwin = 0;
     int maxCoups = 0;
     int nbCoups = 0;
+    int restart = 0;
 
 
     size = getsValue("Entrez la taille de la grille: ", 1);
     maxCoups = getsValue("Entrez un nombre maximum de coups: ", 1);
 
+    Matrix matrixNoGame = initMatrix(size);
     Matrix matrix = initMatrix(size);
-    randomMatrix(matrix, size, 6);
+    randomMatrix(matrixNoGame, size, 6);
+    copyMatrix(matrix, matrixNoGame, size);
 
     SDL_Surface *screen = initSDLwindow(504, 504);
     printMatrixSDL(matrix, size, screen, 0);
@@ -35,12 +38,22 @@ int main() {
     SDL_Event event;
     char buf[100];
     while (!boolwin && nbCoups < maxCoups && PLAY) {
+        /* RESTART */
+        if (restart) {
+            copyMatrix(matrix, matrixNoGame, size);
+            printMatrixSDL(matrix, size, screen, 0); 
+            nbCoups = 0;
+            restart = 0;       
+        }
+
         int playing = 0;
         sprintf(buf, "Color Flood Equilibre (%d coups restant)", maxCoups - nbCoups);
         SDL_WM_SetCaption(buf, NULL);
+
         /* Fixe for Mac */
         if (nbCoups == 0) 
             SDL_Flip(screen);
+        
         SDL_WaitEvent(&event);
         switch(event.type) {
             case SDL_QUIT: PLAY = 0; break;
@@ -59,6 +72,20 @@ int main() {
                     }
                 }
                 break;
+            case SDL_KEYDOWN:
+                switch(event.key.keysym.sym) {
+                    case SDLK_q:
+                        printf("Exit requested.\n");
+                        PLAY = 0;
+                        break;
+                    case SDLK_r:
+                        printf("Restarting game.\n");
+                        restart = 1;
+                        break;
+                    default:
+                        break;
+                }   
+                break;         
         }
     }
 

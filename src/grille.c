@@ -126,3 +126,11 @@ Matrix initFromFile(flux* f) {
     rewind(f->f);
     return matrix;
 }
+
+void copyMatrix(Matrix dest, Matrix src, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            dest[i][j] = src[i][j];
+        }
+    }
+}
