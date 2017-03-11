@@ -37,7 +37,7 @@ int main() {
 
     SDL_Event event;
     char buf[100];
-    while (!boolwin && nbCoups < maxCoups && PLAY) {
+    while (!(boolwin = win(matrix, size)) && nbCoups < maxCoups && PLAY) {
         /* RESTART */
         if (restart) {
             copyMatrix(matrix, matrixNoGame, size);
@@ -67,7 +67,6 @@ int main() {
                         if (playing != matrix[0][0])
                             nbCoups++;
 			            changeCC(matrix, playing, size);
-		                boolwin = win(matrix, size);
                         printMatrixSDL(matrix, size, screen, 0);
                     }
                 }
