@@ -42,7 +42,7 @@ $(OBJDIR):
 test: $(TEST)
 
 $(TEST): $(COBJTEST) $(COBJ)
-	$(CC) $(CFLAGSTEST) -o $(TEST) $(COBJTEST) $(COBJ) -lcunit
+	$(CC) $(CFLAGSTEST) -o $(TEST) $(COBJTEST) $(COBJ) `sdl-config --cflags --libs` -lSDL -lcunit
 
 $(COBJTEST): $(CSRCTEST) $(CHDRTEST) $(TESTDIR)/$(OBJDIR)
 	$(CC) $(CFLAGS) -o $(TESTDIR)/$(OBJDIR)/main.o -c $(TESTDIR)/main.c
