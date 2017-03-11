@@ -15,7 +15,7 @@ int main() {
 	free(hh);
 	/* ----------- */
 
-    int PLAY = 1;
+    int PLAY = 0;
     int size = 0;
     int boolwin = 0;
     int maxCoups = 0;
@@ -37,7 +37,7 @@ int main() {
 
     SDL_Event event;
     char buf[100];
-    while (!(boolwin = win(matrix, size)) && nbCoups < maxCoups && PLAY) {
+    while (!(boolwin = win(matrix, size)) && nbCoups < maxCoups && !PLAY) {
         /* RESTART */
         if (restart) {
             copyMatrix(matrix, matrixNoGame, size);
@@ -56,7 +56,7 @@ int main() {
         
         SDL_WaitEvent(&event);
         switch(event.type) {
-            case SDL_QUIT: PLAY = 0; break;
+            case SDL_QUIT: PLAY = 1; break;
             case SDL_VIDEORESIZE:
                 screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 32, SDL_HWSURFACE | SDL_RESIZABLE);
                 printMatrixSDL(matrix, size, screen, 0); 
@@ -75,7 +75,7 @@ int main() {
                 switch(event.key.keysym.sym) {
                     case SDLK_q:
                         printf("Exit requested.\n");
-                        PLAY = 0;
+                        PLAY = 1;
                         break;
                     case SDLK_r:
                         printf("Restarting game.\n");
