@@ -1,6 +1,5 @@
 # ABOU ALI Magued, Février 2017
 
-
 CC = gcc
 SRCDIR = src
 HDIR = headers
@@ -9,12 +8,11 @@ TESTDIR = test
 MKDIR = mkdir -p
 
 APP = equilibre.out
-
-CSRC = $(SRCDIR)/main.c $(SRCDIR)/grille.c $(SRCDIR)/file.c $(SRCDIR)/couleur.c $(SRCDIR)/affichage.c
-CHDR = $(HDIR)/grille.h $(HDIR)/file.h $(HDIR)/couleur.h $(HDIR)/affichage.h
+CSRC = $(SRCDIR)/main.c $(SRCDIR)/grille.c $(SRCDIR)/file.c $(SRCDIR)/couleur.c
+CHDR = $(HDIR)/grille.h $(HDIR)/file.h $(HDIR)/couleur.h
 COBJMAIN = $(OBJDIR)/main.o
-COBJ = $(OBJDIR)/grille.o $(OBJDIR)/file.o $(OBJDIR)/couleur.o $(OBJDIR)/affichage.o
-CFLAGS = -std=c99 -Wall -Wextra -I $(HOME)/local/include/
+COBJ = $(OBJDIR)/grille.o $(OBJDIR)/file.o $(OBJDIR)/couleur.o
+CFLAGS = -std=c99 -Wall -Wextra -I $(HOME)/local/include
 
 TEST = test.out
 CSRCTEST = $(TESTDIR)/main.c $(TESTDIR)/$(SRCDIR)/grilleTest.c $(TESTDIR)/$(SRCDIR)/couleurTest.c
@@ -26,19 +24,15 @@ CFLAGSTEST = -L $(HOME)/local/lib
 app: $(APP)
 
 $(APP): $(COBJMAIN) $(COBJ)
-
-	$(CC) $(CFLAGS) -o $(APP) $(COBJMAIN) $(COBJ) `sdl-config --cflags --libs` -lSDL 
+	$(CC) $(CFLAGS) -o $(APP) $(COBJMAIN) $(COBJ)
 
 $(COBJMAIN): $(CSRC) $(CHDR) $(OBJDIR)
-	$(CC) $(CFLAGS) -o $(OBJDIR)/main.o -c $(SRCDIR)/main.c 
-
+	$(CC) $(CFLAGS) -o $(OBJDIR)/main.o -c $(SRCDIR)/main.c
 
 $(COBJ): $(CSRC) $(CHDR) $(OBJDIR)
 	$(CC) $(CFLAGS) -o $(OBJDIR)/grille.o -c $(SRCDIR)/grille.c
 	$(CC) $(CFLAGS) -o $(OBJDIR)/file.o -c $(SRCDIR)/file.c
 	$(CC) $(CFLAGS) -o $(OBJDIR)/couleur.o -c $(SRCDIR)/couleur.c
-	$(CC) $(CFLAGS) -o $(OBJDIR)/affichage.o -c $(SRCDIR)/affichage.c
-  
 
 $(OBJDIR):
 	$(MKDIR) $(OBJDIR)

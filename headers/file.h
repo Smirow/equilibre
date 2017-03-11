@@ -8,7 +8,9 @@
 
 #ifndef __FILE_H
 #define __FILE_H
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 /**
@@ -20,7 +22,7 @@ typedef struct flux {
 } flux;
 
 flux* openFile(char const*);
-void closeFile(flux*);
+void close(flux*);
 char* readALine(flux*);
 int endOfFile(flux*);
 int checkFileFormat(flux*);

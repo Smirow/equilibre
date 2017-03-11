@@ -5,10 +5,6 @@
  * \version 0.0.1
  * \date 10 fevrier 2017
  */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../headers/file.h"
 
 int BUFF_MAX = 200;
@@ -38,7 +34,7 @@ flux* openFile(char const* s) {
  *
  * \param flux* f correspondant au flux à fermer.
  */
-void closeFile(flux* f) {
+void close(flux* f) {
     fclose(f->f);
     free(f);
 }
