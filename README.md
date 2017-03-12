@@ -7,7 +7,7 @@
 sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev
 
 /* Compile the app */
-make
+make // Compilation on Mac OSX need a SDL lib installed with brew (brew install sdl, or Macport but not tested), if you want to use the SDL framework, you will need to modify the makefile and add the needed files.
 
 /* Run the app */
 ./equilibre.out
@@ -24,3 +24,7 @@ make doc // The documentation doc.pdf is generated in the root directory
 /* Clean */
 make clean
 ```
+
+## HOW TO USE
+
+Les coups restant sont affichés sur la barre d'état. La fenêtre est completement "resisable" et l'interface responsive. Cliquez sur la couleur choisie pour jouer, R pour rejouer la partie sans modifier la grille et Q pour quitter.

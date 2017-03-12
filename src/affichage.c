@@ -2,7 +2,7 @@
  * \file affichage.c
  * \brief Fonctionnalité S2 : SDL
  * \author Team Équilibre
- * \version 0.0.1
+ * \version 0.0.2
  * \date 10 Mars 2017
  */
 #include <string.h>
