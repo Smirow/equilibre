@@ -1,3 +1,10 @@
+/**
+ * \file affichage.c
+ * \brief Fonctionnalité S2 : SDL
+ * \author Team Équilibre
+ * \version 0.0.1
+ * \date 10 Mars 2017
+ */
 #include <string.h>
 #include <unistd.h>
 #include <SDL/SDL.h>
@@ -6,7 +13,14 @@
 #include "../headers/grille.h"
 #include "../headers/affichage.h"
 
-
+/**
+ * \fn int getsValue(char* str, int min)
+ * \brief Demande à l'utilisateur une valeur
+ *
+ * \param char* str Le message à affiché.
+ * \param int min Le minimum de la valeur souhaité.
+ * \return int la valeur entrée par l'utilisateur
+ */
 int getsValue(char* str, int min) {
     int res = 0;
     char *p1, s1[100];
@@ -22,7 +36,16 @@ int getsValue(char* str, int min) {
     }
 }
 
-SDL_Surface* initSDLwindow(int width, int height){
+
+/**
+ * \fn SDL_Surface* initSDLwindow(int width, int height)
+ * \brief Initialise la fenêtre à l'aide de la SDL
+ *
+ * \param int width la longeur de la fenetre.
+ * \param int height la largeur de la fenetre.
+ * \return SDL_Surface* la surface SDL 
+ */
+SDL_Surface* initSDLwindow(int width, int height) {
 
     if(SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
         fprintf( stderr, "Video initialization failed: %s\n", SDL_GetError( ) );
@@ -37,7 +60,19 @@ SDL_Surface* initSDLwindow(int width, int height){
     return screen;
 }
 
-// px, py coordonnées haut, gauche du pixel
+
+/**
+ * \fn void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, int b)
+ * \brief dessine un carrée dans la fenetre 
+ *
+ * \param SDL_Surface *ecran la surface sur laquelle dessiner
+ * \param int px la position X du pixel haut gauche
+ * \param int py la position Y du pixel haut gauche
+ * \param int size la tailel du carrée à affiché
+ * \param int r la composante rouge de la couleur du carrée
+ * \param int g la composante verte de la couleur du carrée
+ * \param int b la composante bleue  de la couleur du carrée
+ */
 void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, int b) {
     SDL_Rect rect;
     rect.x = px;
@@ -47,11 +82,31 @@ void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, i
     SDL_FillRect(ecran, &rect, SDL_MapRGB(ecran->format, r, g, b));
 }
 
+
+/**
+ * \fn void fillScreen(SDL_Surface *ecran, int r, int g, int b)
+ * \brief Colorie le "fond" de la fenetre 
+ *
+ * \param SDL_Surface *ecran la surface SDL
+ * \param int r la composante rouge de la couleur du carrée
+ * \param int g la composante verte de la couleur du carrée
+ * \param int b la composante bleue  de la couleur du carrée
+ */
 void fillScreen(SDL_Surface *ecran, int r, int g, int b) {
     SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format, r, g, b));
     SDL_Flip(ecran);
 }
 
+
+/**
+ * \fn void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark)
+ * \brief affiche la grille sur la fenetre
+ *
+ * \param Matrix mat la grille
+ * \param int size la taille de la grille
+ * \param SDL_Surface *ecran la surface SDL
+ * \param int dark decallage vers la gauche des couleurs
+ */
 void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark) { 
     fillScreen(ecran, 30, 30, 30);
     int sizeToConsider = ecran->w;
@@ -96,6 +151,12 @@ void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark) {
     SDL_Flip(ecran);
 }
 
+
+/**
+ * \fn void printWin()
+ * \brief fonction de fin de partie
+ *
+ */
 void printWin() {
     SDL_Event event;
     int quit = 1;
@@ -112,6 +173,18 @@ void printWin() {
     }
 }
 
+
+/**
+ * \fn int getValueMatrix(int x, int y, Matrix matrix, int size, SDL_Surface *ecran)
+ * \brief Retrouve la valeur de la case sous ajacente au clic
+ *
+ * \param int x position X du clic
+ * \param int y position Y du clic
+ * \param Matrix mat la grille
+ * \param int size la taille de la grille
+ * \param SDL_Surface *ecran la surface SDL
+ * \return int la valeur de la case
+ */
 int getValueMatrix(int x, int y, Matrix matrix, int size, SDL_Surface *ecran) {
     int sizeToConsider = ecran->w;
     if (ecran->w > ecran->h) 

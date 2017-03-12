@@ -37,6 +37,7 @@ int main() {
 
     SDL_Event event;
     char buf[100];
+    /* Main Game While */
     while (!(boolwin = win(matrix, size)) && nbCoups < maxCoups && !PLAY) {
         /* RESTART */
         if (restart) {
@@ -88,6 +89,7 @@ int main() {
         }
     }
 
+    /* Fin de partie */
     if (boolwin) {
         printMatrixSDL(matrix, size, screen, 0);
         SDL_WM_SetCaption("Color Flood Equilibre (partie gagnée)", NULL);
