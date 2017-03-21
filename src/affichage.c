@@ -125,3 +125,44 @@ int getValueMatrix(int x, int y, Matrix matrix, int size, SDL_Surface *ecran) {
     }
     return 0;
 }
+
+
+
+/*void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, int b) */
+void affiche_win(SDL_Surface *ecran,int size){
+    int x = 0,y = 0;
+    int h = ecran->h;
+    int w = ecran->w;
+    int sizeToConsider = ecran->w;
+    if (ecran->w > ecran->h) 
+        sizeToConsider = ecran->h;
+    int offset = (sizeToConsider%size)/2;
+    int offsetW = (ecran->w - sizeToConsider)/2 + offset/2;
+    int offsetH = (ecran->h - sizeToConsider)/2 + offset;
+    int sizeSquare = sizeToConsider/17;
+
+    x = offsetW + 2*sizeSquare;
+    y = offsetH + h/3;
+    for (int i = 0; i < 3; ++i)
+    {
+        drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, 255, 255, 255);
+        drawRectangle(ecran, x+4*sizeSquare, y+i*sizeSquare, sizeSquare, 255, 255, 255);        
+    }
+    drawRectangle(ecran, x+sizeSquare/2+5, y+3*sizeSquare, sizeSquare, 255, 255, 255);   
+    drawRectangle(ecran, x+sizeSquare+5, y+4*sizeSquare, sizeSquare, 255, 255, 255);   
+    drawRectangle(ecran, x+sizeSquare*2, y+3*sizeSquare, sizeSquare, 255, 255, 255);   
+    drawRectangle(ecran, x+sizeSquare*3-5, y+4*sizeSquare, sizeSquare, 255, 255, 255);   
+    drawRectangle(ecran, x+sizeSquare*7/2-5, y+3*sizeSquare, sizeSquare, 255, 255, 255);   
+    drawRectangle(ecran, x+sizeSquare*2, y+2*sizeSquare+12, sizeSquare, 255, 255, 255);   
+
+    for (int i = 0; i < 5; ++i)
+    {
+         drawRectangle(ecran, x+6*sizeSquare, y+i*sizeSquare, sizeSquare, 255, 255, 255);   
+         drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, 255, 255, 255);   
+         drawRectangle(ecran, x+12*sizeSquare, y+i*sizeSquare, sizeSquare, 255, 255, 255);   
+    }
+         drawRectangle(ecran, x+9*sizeSquare, y+sizeSquare, sizeSquare, 255, 255, 255);   
+         drawRectangle(ecran, x+10*sizeSquare, y+2*sizeSquare, sizeSquare, 255, 255, 255);
+         drawRectangle(ecran, x+11*sizeSquare, y+3*sizeSquare, sizeSquare, 255, 255, 255);
+
+}
