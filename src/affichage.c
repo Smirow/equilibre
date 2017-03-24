@@ -38,7 +38,6 @@ SDL_Surface* initSDLwindow(int width, int height){
     return screen;
 }
 
-// px, py coordonnées haut, gauche du pixel
 void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, int b) {
     SDL_Rect rect;
     rect.x = px;
@@ -97,21 +96,6 @@ void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark) {
     SDL_Flip(ecran);
 }
 
-void printWin() {
-    SDL_Event event;
-    int quit = 1;
-    while(quit) {
-        SDL_WaitEvent(&event);
-        switch(event.type) {
-            case SDL_QUIT: 
-                quit = 0; 
-                break;
-            case SDL_MOUSEBUTTONUP: 
-                quit = 0; 
-                break;
-        }
-    }
-}
 
 int getValueMatrix(int x, int y, Matrix matrix, int size, SDL_Surface *ecran) {
     int sizeToConsider = ecran->w;
@@ -129,8 +113,7 @@ int getValueMatrix(int x, int y, Matrix matrix, int size, SDL_Surface *ecran) {
 
 
 
-/*void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, int b) */
-void affiche_win(SDL_Surface *ecran,int size){
+void affiche_win(SDL_Surface *ecran,int size, int couleur){
     int x = 0,y = 0;
     int sizeToConsider = ecran->w;
     if (ecran->w > ecran->h) 
@@ -142,28 +125,86 @@ void affiche_win(SDL_Surface *ecran,int size){
 
     x = offsetW + 2*sizeSquare;
     y = offsetH + ecran->h/3;
-    for (int i = 0; i < 3; ++i)
-    {
-        drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, 255, 255, 255);
-        drawRectangle(ecran, x+4*sizeSquare, y+i*sizeSquare, sizeSquare, 255, 255, 255);        
-    }
-    drawRectangle(ecran, x+sizeSquare/2+5, y+3*sizeSquare, sizeSquare, 255, 255, 255);   
-    drawRectangle(ecran, x+sizeSquare+5, y+4*sizeSquare, sizeSquare, 255, 255, 255);   
-    drawRectangle(ecran, x+sizeSquare*2, y+3*sizeSquare, sizeSquare, 255, 255, 255);   
-    drawRectangle(ecran, x+sizeSquare*3-5, y+4*sizeSquare, sizeSquare, 255, 255, 255);   
-    drawRectangle(ecran, x+sizeSquare*7/2-5, y+3*sizeSquare, sizeSquare, 255, 255, 255);   
-    drawRectangle(ecran, x+sizeSquare*2, y+2*sizeSquare+12, sizeSquare, 255, 255, 255);   
 
-    for (int i = 0; i < 5; ++i)
-    {
-         drawRectangle(ecran, x+6*sizeSquare, y+i*sizeSquare, sizeSquare, 255, 255, 255);   
-         drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, 255, 255, 255);   
-         drawRectangle(ecran, x+12*sizeSquare, y+i*sizeSquare, sizeSquare, 255, 255, 255);   
-    }
-         drawRectangle(ecran, x+9*sizeSquare, y+sizeSquare, sizeSquare, 255, 255, 255);   
-         drawRectangle(ecran, x+10*sizeSquare, y+2*sizeSquare, sizeSquare, 255, 255, 255);
-         drawRectangle(ecran, x+11*sizeSquare, y+3*sizeSquare, sizeSquare, 255, 255, 255);
+    int varr=0, varg=0, varb=0;
+    int compteurcouleur=0, switchcouleur=0, click=0, r=0, g=0, b=0;
+    SDL_Event event;
 
+    switch(couleur)
+    {
+        case 1 :
+            r=201, g=20, b=24;
+            break;
+        case 2 :
+            r=77, g=142, b=21;
+            break;              
+        case 3 :
+            r=194, g=143, b=20;
+            break;
+        case 4:
+            r=45, g=85, b=220;
+            break;
+        case 5 :
+            r=116, g=76, b=112;
+            break;
+        case 6 :
+            r=23, g=150, b=150;
+            break;
+        default :
+            r=0, g=0, b=0;
+            break;
+    }
+    while(click==0)
+    {
+        if(switchcouleur==0)
+        {
+            varr+=r/30, varg+=g/30, varb+=b/30;
+            compteurcouleur++;
+            if(compteurcouleur==30)
+                switchcouleur=1;
+        }
+        else
+        {
+            varr-=r/30, varg-=g/30, varb-=b/30;
+            compteurcouleur--;
+            if(compteurcouleur==0)
+                switchcouleur=0;
+        }
+        for (int i = 0; i < 3; ++i)
+        {
+            drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);
+            drawRectangle(ecran, x+4*sizeSquare, y+i*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);        
+        }
+        drawRectangle(ecran, x+sizeSquare/2+5, y+3*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare+5, y+4*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare*2, y+3*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare*3-5, y+4*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare*7/2-5, y+3*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare*2, y+2*sizeSquare+12, sizeSquare, 255-varr, 255-varg, 255-varb);   
+
+        for (int i = 0; i < 5; ++i)
+        {
+             drawRectangle(ecran, x+6*sizeSquare, y+i*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+             drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+             drawRectangle(ecran, x+12*sizeSquare, y+i*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        }
+             drawRectangle(ecran, x+9*sizeSquare, y+sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+             drawRectangle(ecran, x+10*sizeSquare, y+2*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);
+             drawRectangle(ecran, x+11*sizeSquare, y+3*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);
+
+        SDL_Flip(ecran);
+        nanosleep((const struct timespec[]){{0, 10000000L}}, NULL);
+        while(SDL_PollEvent(&event))
+        { 
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                if (event.button.button == SDL_BUTTON_LEFT)
+                    click = 1;
+            }
+            if(event.type==SDL_QUIT)
+                click=1;
+        }
+    }
 }
 
 void affiche_lose(SDL_Surface *ecran,int size){
@@ -230,10 +271,15 @@ void affiche_lose(SDL_Surface *ecran,int size){
         SDL_Flip(ecran);
         nanosleep((const struct timespec[]){{0, 10000000L}}, NULL);
         while(SDL_PollEvent(&event))
-             if (event.type == SDL_MOUSEBUTTONDOWN)
+        { 
+            if (event.type == SDL_MOUSEBUTTONDOWN)
             {
                 if (event.button.button == SDL_BUTTON_LEFT)
                     click = 1;
             }
+            if(event.type==SDL_QUIT)
+                click=1;
+        }
+
     }
 }
