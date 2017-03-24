@@ -173,23 +173,41 @@ void affiche_lose(SDL_Surface *ecran,int size){
     int offset = (sizeToConsider%size)/2;
     int offsetW = (ecran->w - sizeToConsider)/2 + offset/2;
     int offsetH = (ecran->h - sizeToConsider)/2 + offset;
-    int sizeSquare = sizeToConsider/23;
+    int sizeSquare = sizeToConsider/22;
 
     x = offsetW + 2*sizeSquare;
     y = offsetH + ecran->h/3;
 
     for (int i = 0; i < 7; ++i)
     {
-        drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, 0, 0, 0);      
-        drawRectangle(ecran, x+5*sizeSquare, y+i*sizeSquare, sizeSquare, 0, 0, 0);      
-        drawRectangle(ecran, x+10*sizeSquare, y+i*sizeSquare, sizeSquare, 0, 0, 0);      
+        drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, 0, 0, 0);                   //L
+
+        drawRectangle(ecran, x+5*sizeSquare, y+i*sizeSquare, sizeSquare, 0, 0, 0);      //O 
+        drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, 0, 0, 0);    
+
+        drawRectangle(ecran, x+15*sizeSquare, y+i*sizeSquare, sizeSquare, 0, 0, 0);      //E    
     }
 
     for (int i = 0; i < 4; ++i)
     {
-        drawRectangle(ecran, x+i*sizeSquare, y+7*sizeSquare, sizeSquare, 0, 0, 0);      
-        drawRectangle(ecran, x+(i+5)*sizeSquare, y, sizeSquare, 0, 0, 0);      
-        drawRectangle(ecran, x+(i+5)*sizeSquare, y+7*sizeSquare, sizeSquare, 0, 0, 0);      
+        drawRectangle(ecran, x+i*sizeSquare, y+6*sizeSquare, sizeSquare, 0, 0, 0);      //L
+
+        drawRectangle(ecran, x+(i+5)*sizeSquare, y, sizeSquare, 0, 0, 0);               //0
+        drawRectangle(ecran, x+(i+5)*sizeSquare, y+6*sizeSquare, sizeSquare, 0, 0, 0); 
+
+        drawRectangle(ecran, x+(i+10)*sizeSquare, y, sizeSquare, 0, 0, 0);              //S
+        drawRectangle(ecran, x+(i+10)*sizeSquare, y+3*sizeSquare, sizeSquare, 0, 0, 0);      
+        drawRectangle(ecran, x+(i+10)*sizeSquare, y+6*sizeSquare, sizeSquare, 0, 0, 0);    
+        drawRectangle(ecran, x+10*sizeSquare, y+i*sizeSquare, sizeSquare, 0, 0, 0);      
+        drawRectangle(ecran, x+13*sizeSquare, y+(i+3)*sizeSquare, sizeSquare, 0, 0, 0);      
+
+        drawRectangle(ecran, x+(i+15)*sizeSquare, y, sizeSquare, 0, 0, 0); //E     
+        drawRectangle(ecran, x+(i+15)*sizeSquare, y+6*sizeSquare, sizeSquare, 0, 0, 0);      
+    }
+
+    for (int i = 0; i < 3; ++i)
+    {
+        drawRectangle(ecran, x+(i+15)*sizeSquare, y+3*sizeSquare, sizeSquare, 0, 0, 0);      
     }
 
 }
