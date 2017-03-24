@@ -154,39 +154,109 @@ void affiche(FIFO *suite) {
  * \param int nextcolor la couleur du tour actuelle
  * \param int size la taille de la grille de jeu
  */
-void changeCC(Matrix grille, int nextcolor, int size) {
+int changeCC(Matrix grille, int nextcolor, int size) {
+	Matrix matrixCopy = initMatrix(size);
+	int CCsize = 1;
+	int NewCCsize = 0;
 	int color = grille[0][0];
 	int x, y;
 	coordonnees coord = modifcoord(0, 0);
 	coordonnees coord2 = modifcoord(0, 0);
 	FIFO *f = initFIFOVide();
+	FIFO *f2 = initFIFOVide();
 	constructeur(f, coord);
+	constructeur(f2, coord);
 	grille[0][0] = nextcolor;
-	while((!emptyFIFO(f)) && (color != nextcolor)) {
+	matrixCopy[0][0] = 1;
+	while((!emptyFIFO(f) || !emptyFIFO(f2)) && (color != nextcolor)) {
 		coord2 = defile(f);
 		x = coord2.x, y = coord2.y;
 		if(x > 0 && grille[x-1][y] == color) {
 			coord = modifcoord(x-1, y);
 			constructeur(f, coord);
 			grille[x-1][y] = nextcolor;
+			matrixCopy[x-1][y] = 1;
+			CCsize++;
 		}
 		if(y > 0 && grille[x][y-1] == color) {
 			coord = modifcoord(x, y-1);
 			constructeur(f, coord);
 			grille[x][y-1] = nextcolor;
+			matrixCopy[x][y-1] = 1;
+			CCsize++;
 		}
 		if(x < size-1 && grille[x+1][y] == color) {
 			coord = modifcoord(x+1, y);
 			constructeur(f, coord);
 			grille[x+1][y] = nextcolor;
+			matrixCopy[x+1][y] = 1;
+			CCsize++;
 		}
 		if(y < size-1 && grille[x][y+1] == color) {
 			coord = modifcoord(x, y+1);
 			constructeur(f, coord);
 			grille[x][y+1] = nextcolor;
+			matrixCopy[x][y+1] = 1;
+			CCsize++;
 		}
+
+		/* Count New CC */
+		if(x > 0 && grille[x-1][y] == nextcolor && !matrixCopy[x-1][y]) {
+			coord = modifcoord(x-1, y);
+			constructeur(f2, coord);
+			matrixCopy[x-1][y] = 1;
+			CCsize++;
+		}
+		if(y > 0 && grille[x][y-1] == nextcolor && !matrixCopy[x][y-1]) {
+			coord = modifcoord(x, y-1);
+			constructeur(f2, coord);
+			matrixCopy[x][y-1] = 1;
+			CCsize++;
+		}
+		if(x < size-1 && grille[x+1][y] == nextcolor && !matrixCopy[x+1][y]) {
+			coord = modifcoord(x+1, y);
+			constructeur(f2, coord);
+			matrixCopy[x+1][y] = 1;
+			CCsize++;
+		}
+		if(y < size-1 && grille[x][y+1] == nextcolor && !matrixCopy[x][y+1]) {
+			coord = modifcoord(x, y+1);
+			constructeur(f2, coord);
+			matrixCopy[x][y+1] = 1;
+			CCsize++;
+		}
+
+		/* Count New CC */
+		coord2 = defile(f2);
+		x = coord2.x, y = coord2.y;
+		if(x > 0 && grille[x-1][y] == nextcolor && !matrixCopy[x-1][y]) {
+			coord = modifcoord(x-1, y);
+			constructeur(f2, coord);
+			matrixCopy[x-1][y] = 1;
+			CCsize++;
+		}
+		if(y > 0 && grille[x][y-1] == nextcolor && !matrixCopy[x][y-1]) {
+			coord = modifcoord(x, y-1);
+			constructeur(f2, coord);
+			matrixCopy[x][y-1] = 1;
+			CCsize++;
+		}
+		if(x < size-1 && grille[x+1][y] == nextcolor && !matrixCopy[x+1][y]) {
+			coord = modifcoord(x+1, y);
+			constructeur(f2, coord);
+			matrixCopy[x+1][y] = 1;
+			CCsize++;
+		}
+		if(y < size-1 && grille[x][y+1] == nextcolor && !matrixCopy[x][y+1]) {
+			coord = modifcoord(x, y+1);
+			constructeur(f2, coord);
+			matrixCopy[x][y+1] = 1;
+			CCsize++;
+		}
+		
 	}
 	freeFIFO(f);
+	return CCsize;
 }
 
 /**
