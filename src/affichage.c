@@ -180,20 +180,21 @@ void affiche_lose(SDL_Surface *ecran,int size){
     y = offsetH + ecran->h/3;
 
     int puiss2=0;
-    int ok=0;
-    for(int j=0 ; j<252 ; j++)
+    int switchcouleur=0, click=0;
+    SDL_Event event;
+    while(click==0)
     {
-        if(ok==0)
+        if(switchcouleur==0)
         {
             puiss2+=2;
             if(puiss2>250)
-            {
-                ok=1;
-            }
+                switchcouleur=1;
         }
         else
         {
             puiss2-=2;
+            if(puiss2<=0)
+                switchcouleur=0;
         }
         for (int i = 0; i < 7; ++i)
         {
@@ -228,5 +229,11 @@ void affiche_lose(SDL_Surface *ecran,int size){
         }
         SDL_Flip(ecran);
         nanosleep((const struct timespec[]){{0, 10000000L}}, NULL);
+        while(SDL_PollEvent(&event))
+             if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                if (event.button.button == SDL_BUTTON_LEFT)
+                    click = 1;
+            }
     }
 }
