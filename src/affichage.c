@@ -220,56 +220,65 @@ void affiche_lose(SDL_Surface *ecran,int size){
     x = offsetW + 2*sizeSquare;
     y = offsetH + ecran->h/3;
 
-    int puiss2=0;
+    int r=0, g=0, b=240;
     int switchcouleur=0, click=0;
     SDL_Event event;
     while(click==0)
     {
         if(switchcouleur==0)
         {
-            puiss2+=2;
-            if(puiss2>250)
+            r+=8;
+            b-=8;
+            if(r>=240)
                 switchcouleur=1;
+        }
+        else if(switchcouleur==1)
+        {
+            g+=8;
+            r-=8;
+            if(g>=240)
+                switchcouleur=2;
         }
         else
         {
-            puiss2-=2;
-            if(puiss2<=0)
+            b+=8;
+            g-=8;
+            if(b>=240)
                 switchcouleur=0;
         }
         for (int i = 0; i < 7; ++i)
         {
-            drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);                   //L
+            drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, r, g ,b);                   //L
     
-            drawRectangle(ecran, x+5*sizeSquare, y+i*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      //O 
-            drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);    
+            drawRectangle(ecran, x+5*sizeSquare, y+i*sizeSquare, sizeSquare, r, g ,b);      //O 
+            drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, r, g ,b);    
     
-            drawRectangle(ecran, x+15*sizeSquare, y+i*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      //E    
+            drawRectangle(ecran, x+15*sizeSquare, y+i*sizeSquare, sizeSquare, r, g ,b);      //E    
         }
     
         for (int i = 0; i < 4; ++i)
         {
-            drawRectangle(ecran, x+i*sizeSquare, y+6*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      //L
+            drawRectangle(ecran, x+i*sizeSquare, y+6*sizeSquare, sizeSquare, r, g ,b);      //L
     
-            drawRectangle(ecran, x+(i+5)*sizeSquare, y, sizeSquare, puiss2, 0 ,255-puiss2);               //0
-            drawRectangle(ecran, x+(i+5)*sizeSquare, y+6*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2); 
+            drawRectangle(ecran, x+(i+5)*sizeSquare, y, sizeSquare, r, g ,b);               //0
+            drawRectangle(ecran, x+(i+5)*sizeSquare, y+6*sizeSquare, sizeSquare, r, g ,b); 
     
-            drawRectangle(ecran, x+(i+10)*sizeSquare, y, sizeSquare, puiss2, 0 ,255-puiss2);              //S
-            drawRectangle(ecran, x+(i+10)*sizeSquare, y+3*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      
-            drawRectangle(ecran, x+(i+10)*sizeSquare, y+6*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);    
-            drawRectangle(ecran, x+10*sizeSquare, y+i*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      
-            drawRectangle(ecran, x+13*sizeSquare, y+(i+3)*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      
+            drawRectangle(ecran, x+(i+10)*sizeSquare, y, sizeSquare, r, g ,b);              //S
+            drawRectangle(ecran, x+(i+10)*sizeSquare, y+3*sizeSquare, sizeSquare, r, g ,b);      
+            drawRectangle(ecran, x+(i+10)*sizeSquare, y+6*sizeSquare, sizeSquare, r, g ,b);    
+            drawRectangle(ecran, x+10*sizeSquare, y+i*sizeSquare, sizeSquare, r, g , b);      
+            drawRectangle(ecran, x+13*sizeSquare, y+(i+3)*sizeSquare, sizeSquare, r, g ,b);      
     
-            drawRectangle(ecran, x+(i+15)*sizeSquare, y, sizeSquare, puiss2, 0 ,255-puiss2);              //E     
-            drawRectangle(ecran, x+(i+15)*sizeSquare, y+6*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      
+            drawRectangle(ecran, x+(i+15)*sizeSquare, y, sizeSquare, r, g ,b);              //E     
+            drawRectangle(ecran, x+(i+15)*sizeSquare, y+6*sizeSquare, sizeSquare, r, g ,b);      
         }
     
         for (int i = 0; i < 3; ++i)
         {
-            drawRectangle(ecran, x+(i+15)*sizeSquare, y+3*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      
+            drawRectangle(ecran, x+(i+15)*sizeSquare, y+3*sizeSquare, sizeSquare, r, g ,b);      
         }
         SDL_Flip(ecran);
-        nanosleep((const struct timespec[]){{0, 10000000L}}, NULL);
+        nanosleep((const struct timespec[]){{0, 20000000L}}, NULL);
         while(SDL_PollEvent(&event))
         { 
             if (event.type == SDL_MOUSEBUTTONDOWN)
