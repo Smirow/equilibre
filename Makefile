@@ -33,7 +33,7 @@ $(COBJ): $(CSRC) $(CHDR) $(OBJDIR)
 	$(CC) $(CFLAGS) -o $(OBJDIR)/grille.o -c $(SRCDIR)/grille.c
 	$(CC) $(CFLAGS) -o $(OBJDIR)/file.o -c $(SRCDIR)/file.c
 	$(CC) $(CFLAGS) -o $(OBJDIR)/couleur.o -c $(SRCDIR)/couleur.c
-	$(CC) $(CFLAGS) -o $(OBJDIR)/affichage.o -c $(SRCDIR)/affichage.c
+	$(CC) $(CFLAGS) -D_POSIX_C_SOURCE=199309L -o $(OBJDIR)/affichage.o -c $(SRCDIR)/affichage.c
 
 $(OBJDIR):
 	$(MKDIR) $(OBJDIR)

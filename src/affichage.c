@@ -1,6 +1,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <SDL/SDL.h>
+#include <time.h>
 
 #include "../headers/file.h"
 #include "../headers/grille.h"
@@ -178,36 +179,54 @@ void affiche_lose(SDL_Surface *ecran,int size){
     x = offsetW + 2*sizeSquare;
     y = offsetH + ecran->h/3;
 
-    for (int i = 0; i < 7; ++i)
+    int puiss2=0;
+    int ok=0;
+    for(int j=0 ; j<252 ; j++)
     {
-        drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, 0, 0, 0);                   //L
-
-        drawRectangle(ecran, x+5*sizeSquare, y+i*sizeSquare, sizeSquare, 0, 0, 0);      //O 
-        drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, 0, 0, 0);    
-
-        drawRectangle(ecran, x+15*sizeSquare, y+i*sizeSquare, sizeSquare, 0, 0, 0);      //E    
+        if(ok==0)
+        {
+            puiss2+=2;
+            if(puiss2>250)
+            {
+                ok=1;
+            }
+        }
+        else
+        {
+            puiss2-=2;
+        }
+        for (int i = 0; i < 7; ++i)
+        {
+            drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);                   //L
+    
+            drawRectangle(ecran, x+5*sizeSquare, y+i*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      //O 
+            drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);    
+    
+            drawRectangle(ecran, x+15*sizeSquare, y+i*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      //E    
+        }
+    
+        for (int i = 0; i < 4; ++i)
+        {
+            drawRectangle(ecran, x+i*sizeSquare, y+6*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      //L
+    
+            drawRectangle(ecran, x+(i+5)*sizeSquare, y, sizeSquare, puiss2, 0 ,255-puiss2);               //0
+            drawRectangle(ecran, x+(i+5)*sizeSquare, y+6*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2); 
+    
+            drawRectangle(ecran, x+(i+10)*sizeSquare, y, sizeSquare, puiss2, 0 ,255-puiss2);              //S
+            drawRectangle(ecran, x+(i+10)*sizeSquare, y+3*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      
+            drawRectangle(ecran, x+(i+10)*sizeSquare, y+6*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);    
+            drawRectangle(ecran, x+10*sizeSquare, y+i*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      
+            drawRectangle(ecran, x+13*sizeSquare, y+(i+3)*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      
+    
+            drawRectangle(ecran, x+(i+15)*sizeSquare, y, sizeSquare, puiss2, 0 ,255-puiss2);              //E     
+            drawRectangle(ecran, x+(i+15)*sizeSquare, y+6*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      
+        }
+    
+        for (int i = 0; i < 3; ++i)
+        {
+            drawRectangle(ecran, x+(i+15)*sizeSquare, y+3*sizeSquare, sizeSquare, puiss2, 0 ,255-puiss2);      
+        }
+        SDL_Flip(ecran);
+        nanosleep((const struct timespec[]){{0, 10000000L}}, NULL);
     }
-
-    for (int i = 0; i < 4; ++i)
-    {
-        drawRectangle(ecran, x+i*sizeSquare, y+6*sizeSquare, sizeSquare, 0, 0, 0);      //L
-
-        drawRectangle(ecran, x+(i+5)*sizeSquare, y, sizeSquare, 0, 0, 0);               //0
-        drawRectangle(ecran, x+(i+5)*sizeSquare, y+6*sizeSquare, sizeSquare, 0, 0, 0); 
-
-        drawRectangle(ecran, x+(i+10)*sizeSquare, y, sizeSquare, 0, 0, 0);              //S
-        drawRectangle(ecran, x+(i+10)*sizeSquare, y+3*sizeSquare, sizeSquare, 0, 0, 0);      
-        drawRectangle(ecran, x+(i+10)*sizeSquare, y+6*sizeSquare, sizeSquare, 0, 0, 0);    
-        drawRectangle(ecran, x+10*sizeSquare, y+i*sizeSquare, sizeSquare, 0, 0, 0);      
-        drawRectangle(ecran, x+13*sizeSquare, y+(i+3)*sizeSquare, sizeSquare, 0, 0, 0);      
-
-        drawRectangle(ecran, x+(i+15)*sizeSquare, y, sizeSquare, 0, 0, 0); //E     
-        drawRectangle(ecran, x+(i+15)*sizeSquare, y+6*sizeSquare, sizeSquare, 0, 0, 0);      
-    }
-
-    for (int i = 0; i < 3; ++i)
-    {
-        drawRectangle(ecran, x+(i+15)*sizeSquare, y+3*sizeSquare, sizeSquare, 0, 0, 0);      
-    }
-
 }
