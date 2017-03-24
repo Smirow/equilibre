@@ -1,7 +1,8 @@
+#include <stdio.h>
+#include <CUnit/Basic.h>
 #include "../../headers/file.h"
 #include "../../headers/grille.h"
 #include "../headers/grilleTest.h"
-#include <CUnit/Basic.h>
 
 
 void test_initMatrix(void) {
@@ -29,7 +30,7 @@ void test_randomMatrix(void) {
 }
 
 void test_initFromFile(void) {
-    int test_1[3][3] = {{3, 5, 9}, {1, 5, 7}, {3, 8, 5}};
+    int test_1[3][3] = {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}};
 
 	flux* f = openFile("test/ressources/grille_1.txt");
     int size = checkFileFormat(f);

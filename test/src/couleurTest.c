@@ -1,6 +1,7 @@
+#include <stdio.h>
+#include <CUnit/Basic.h>
 #include "../../headers/couleur.h"
 #include "../headers/couleurTest.h"
-#include <CUnit/Basic.h>
 
 
 void test_replace(void) {

@@ -5,6 +5,11 @@
  * \version 0.0.1
  * \date 10 fevrier 2017
  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <math.h>
 #include "../headers/file.h"
 #include "../headers/grille.h"
 
@@ -51,7 +56,30 @@ void freeMatrix(Matrix matrix, int size) {
 void printMatrix(Matrix matrix, int size) {
     for(int m = 0; m < size; m++) {
         for (int n = 0; n < size; n++) {
-            printf("|%5d%3s", matrix[m][n], "");
+            switch(matrix[m][n]) {
+                case 1:
+                    printf(RED "%1sR", "");
+                    break;              
+                case 2:
+                    printf(GREEN "%1sG", "");
+                    break;
+                case 3:
+                    printf(YELLOW "%1sY", "");
+                    break;
+                case 4:
+                    printf(BLUE "%1sB", "");
+                    break;
+                case 5:
+                    printf(MAGENTA "%1sM", "");
+                    break;
+                case 6:
+                    printf(CYAN "%1sC", "");
+                    break;
+                default:
+                    printf("Erreur couleur");
+                    exit(1);     
+            }
+            printf(COLOR_RESET);
         }
         printf("\n");
     }
@@ -97,4 +125,12 @@ Matrix initFromFile(flux* f) {
     }
     rewind(f->f);
     return matrix;
+}
+
+void copyMatrix(Matrix dest, Matrix src, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            dest[i][j] = src[i][j];
+        }
+    }
 }
