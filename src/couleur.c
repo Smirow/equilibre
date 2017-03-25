@@ -157,7 +157,6 @@ void affiche(FIFO *suite) {
 int changeCC(Matrix grille, int nextcolor, int size) {
 	Matrix matrixCopy = initMatrix(size);
 	int CCsize = 1;
-	int NewCCsize = 0;
 	int color = grille[0][0];
 	int x, y;
 	coordonnees coord = modifcoord(0, 0);
