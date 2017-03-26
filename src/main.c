@@ -3,11 +3,13 @@
 #include <time.h>
 #include <SDL/SDL.h>
 
+#include "../headers/log.h"
 #include "../headers/couleur.h"
 #include "../headers/affichage.h"
 
 int main() {
     srand(time(NULL));
+    initLog();
 
     /* Petit fixe pour valgrind */
 	int *hh = NULL;
