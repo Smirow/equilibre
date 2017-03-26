@@ -120,7 +120,7 @@ void copyMatrixIntoNode(NTree node, Matrix matrixToCopy, int size) {
     }
 }
 
-/* TEST, uncomment and make for testing this module */
+/* TEST, uncomment and make to test this module */
 
 int main() {
     NTree A, B;
