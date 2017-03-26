@@ -4,6 +4,7 @@ typedef struct t_tree {
        int val;
        int nbSon;
        int matrixSize;
+       int CCsize;
        Matrix matrix;
        struct t_tree *tabSon[NBSON];
 } NNode, *NTree;
