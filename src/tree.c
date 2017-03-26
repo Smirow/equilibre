@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 #include "../headers/file.h"
 #include "../headers/grille.h"
@@ -57,10 +56,10 @@ void forceDeleteNTree(NTree tree) {
 
 
 void truncateTree(NTree tree, int level) {
-    if (level == 0) {
+    if (level == -1) {
         forceDeleteNTree(tree);
     }
-    else if (level == 1) {
+    else if (level == 0) {
         int temp = tree->nbSon - 1;
         for (int i = temp; i >= 0; i--) {
             truncateTree(tree->tabSon[i], level - 1);
@@ -76,7 +75,7 @@ void truncateTree(NTree tree, int level) {
 
 
 void freeTree(NTree root) {
-    truncateTree(root, 0);
+    truncateTree(root, -1);
 }
 
 
@@ -122,7 +121,7 @@ void copyMatrixIntoNode(NTree node, Matrix matrixToCopy, int size) {
 }
 
 /* TEST, uncomment and make for testing this module */
-/*
+
 int main() {
     NTree A, B;
     A = newNTree(5);
@@ -140,9 +139,8 @@ int main() {
     randomMatrix(A->matrix, A->matrixSize, 6);
     printMatrix(A->matrix, A->matrixSize);
 
-    removeSon(A, 0);
+    truncateTree(A, 1);
     printNTree(A);
     freeTree(A);
 
 }
-*/
