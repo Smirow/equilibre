@@ -121,7 +121,7 @@ void copyMatrixIntoNode(NTree node, Matrix matrixToCopy, int size) {
 }
 
 /* TEST, uncomment and make to test this module */
-
+/*
 int main() {
     NTree A, B;
     A = newNTree(5);
@@ -144,3 +144,4 @@ int main() {
     freeTree(A);
 
 }
+*/
