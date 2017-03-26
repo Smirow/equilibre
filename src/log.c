@@ -10,6 +10,7 @@
 const char* getStatusChar(enum status sta) {
    switch (sta) {
        case game: return "GAME";
+       case solver: return "SOLVER";
        case info: return "INFO";
        case debug: return "DEBUG";
        case warning: return "WARNING";
