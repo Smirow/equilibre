@@ -1,5 +1,7 @@
 #ifndef __AFFICHAGE_H
 #define __AFFICHAGE_H
+#include "../headers/file.h"
+#include "../headers/grille.h"
 
 int getsValue(char* str, int min);
 SDL_Surface* initSDLwindow();

@@ -8,10 +8,10 @@ TESTDIR = test
 MKDIR = mkdir -p
 
 APP = equilibre.out
-CSRC = $(SRCDIR)/main.c $(SRCDIR)/grille.c $(SRCDIR)/file.c $(SRCDIR)/couleur.c $(SRCDIR)/affichage.c
-CHDR = $(HDIR)/grille.h $(HDIR)/file.h $(HDIR)/couleur.h $(HDIR)/affichage.h
+CSRC = $(SRCDIR)/main.c $(SRCDIR)/grille.c $(SRCDIR)/file.c $(SRCDIR)/couleur.c $(SRCDIR)/affichage.c $(SRCDIR)/solv_rand.c
+CHDR = $(HDIR)/grille.h $(HDIR)/file.h $(HDIR)/couleur.h $(HDIR)/affichage.h $(HDIR)/solv_rand.h
 COBJMAIN = $(OBJDIR)/main.o
-COBJ = $(OBJDIR)/grille.o $(OBJDIR)/file.o $(OBJDIR)/couleur.o $(OBJDIR)/affichage.o
+COBJ = $(OBJDIR)/grille.o $(OBJDIR)/file.o $(OBJDIR)/couleur.o $(OBJDIR)/affichage.o $(OBJDIR)/solv_rand.o
 CFLAGS = -std=c99 -Wall -Wextra -I $(HOME)/local/include/
 
 TEST = test.out
@@ -34,6 +34,7 @@ $(COBJ): $(CSRC) $(CHDR) $(OBJDIR)
 	$(CC) $(CFLAGS) -o $(OBJDIR)/file.o -c $(SRCDIR)/file.c
 	$(CC) $(CFLAGS) -o $(OBJDIR)/couleur.o -c $(SRCDIR)/couleur.c
 	$(CC) $(CFLAGS) -o $(OBJDIR)/affichage.o -c $(SRCDIR)/affichage.c
+	$(CC) $(CFLAGS) -o $(OBJDIR)/solv_rand.o -c $(SRCDIR)/solv_rand.c
 
 $(OBJDIR):
 	$(MKDIR) $(OBJDIR)

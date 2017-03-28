@@ -51,7 +51,7 @@ coordonnees defile(FIFO *f);
 void freeFIFO(FIFO *f);
 void affiche(FIFO *suite);
 coordonnees modifcoord(int x, int y);
-void changeCC(Matrix grille, int nextcolor, int size);
+int changeCC(Matrix grille, int nextcolor, int size);
 int win(Matrix grille, int size);
 
 #endif

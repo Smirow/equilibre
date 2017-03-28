@@ -5,6 +5,7 @@
 
 #include "../headers/couleur.h"
 #include "../headers/affichage.h"
+#include "../headers/solv_rand.h"
 
 int main() {
     srand(time(NULL));
@@ -31,6 +32,15 @@ int main() {
     randomMatrix(matrixNoGame, size, 6);
     copyMatrix(matrix, matrixNoGame, size);
 
+    FIFO * solv = initFIFOVide();
+    int t1 , t2;
+    t1 = clock();
+    solv = best_solv_rand_FIFO(matrix, size);
+    t2 = clock();
+    printf("time : %lf\n", (double)(t2-t1)/CLOCKS_PER_SEC );
+    printf("taille meilleure sol : %d\n", solv->taille );
+    affiche(solv);
+    
     SDL_Surface *screen = initSDLwindow(504, 504);
     printMatrixSDL(matrix, size, screen, 0);
     

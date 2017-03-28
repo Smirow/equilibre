@@ -2,8 +2,7 @@
 #include <unistd.h>
 #include <SDL/SDL.h>
 
-#include "../headers/file.h"
-#include "../headers/grille.h"
+
 #include "../headers/affichage.h"
 
 
