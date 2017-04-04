@@ -1,12 +1,158 @@
 #include <string.h>
 #include <unistd.h>
 #include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
 #include <time.h>
 
 #include "../headers/file.h"
 #include "../headers/grille.h"
 #include "../headers/affichage.h"
 
+
+
+int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
+	SDL_Surface *titre=NULL, *taille=NULL, *difficulte=NULL;
+    SDL_Rect position;
+    SDL_Event event;
+    SDL_Color couleurtxt = {255, 255, 255, 0}; //le 0 enlève un warning
+    char txttaille[100], txtdiff[100], niveaudiff[50];
+    int vardiff=0, positionmenu_x=0, positionmenu_y=0;
+
+	TTF_Font *policetitre = NULL, *policetxt=NULL;
+
+    policetitre = TTF_OpenFont("Symtext.ttf", 30);
+    policetxt = TTF_OpenFont("Symtext.ttf", 20);
+    titre = TTF_RenderText_Solid(policetitre, "Color Flood - Equilibre", couleurtxt);
+
+
+    int continuer=1, quitter=1;
+    while (continuer && quitter)
+    {
+        SDL_WaitEvent(&event);
+        switch(event.type)
+        {
+            case SDL_QUIT:
+                return 0;
+                break;
+            case SDL_KEYDOWN:
+            	switch(event.key.keysym.sym)
+            	{
+            		case SDLK_RETURN:
+            			if(positionmenu_x==0)
+	            			return 1;
+	            		else
+	            			return 0;
+	            		break;
+	            	case SDLK_UP:
+	            		positionmenu_y--;
+	            		if(positionmenu_y==-1)
+	            			positionmenu_y=2;
+    					fillScreen(ecran, 30, 30, 30);
+	            		break;
+	            	case SDLK_DOWN:
+	            		positionmenu_y++;
+	            		if(positionmenu_y==3)
+	            			positionmenu_y=0;
+    					fillScreen(ecran, 30, 30, 30);
+	            		break;
+	            	case SDLK_LEFT:
+	            		switch(positionmenu_y)
+	            		{
+	            			case 0:
+	            				break;
+	            			case 1:
+	            				break;
+		            		case 2:
+			            		positionmenu_x++;
+			            		positionmenu_x%=2;
+			            		break;
+	            		}
+   						fillScreen(ecran, 30, 30, 30);
+	            		break;
+	            	case SDLK_RIGHT:
+	            		switch(positionmenu_y)
+	            		{
+	            			case 0:
+	            				break;
+	            			case 1:
+	            				break;
+		            		case 2:
+			            		positionmenu_x++;
+			            		positionmenu_x%=2;
+			            		break;
+			            }
+    					fillScreen(ecran, 30, 30, 30);
+	            		break;
+	            	default:
+	            		break;
+		        }
+            	break;
+
+        }
+
+        sprintf(txttaille, "Taille : <      %d*%d         >", *size, *size);
+   		taille = TTF_RenderText_Solid(policetxt, txttaille, couleurtxt);
+
+   		switch(vardiff)
+   		{
+   			case 0:
+   				sprintf(niveaudiff, "Sans pression");
+   				*maxCoups=nbCoupsSolveur+100;
+   				break;
+   			case 1:
+   				sprintf(niveaudiff, "Facile");
+   				*maxCoups=nbCoupsSolveur+5;
+   				break;
+   			case 2:
+   				sprintf(niveaudiff, "Difficile");
+   				*maxCoups=nbCoupsSolveur+2;
+   				break;
+   			case 3:
+   				sprintf(niveaudiff, "Niveau solveur");
+   				*maxCoups=nbCoupsSolveur;
+   				break;
+   		}
+
+        if(positionmenu_x==0) //affichage des rectangles gris en fonction de la position dans le menu
+        	drawRectangle(ecran, ecran->w/6, ecran->h-50, 150, 45, 60, 60, 60);
+        else
+        	drawRectangle(ecran, ecran->w/1.55, ecran->h-50, 120, 45, 60, 60, 60);
+
+        sprintf(txtdiff, "Difficulte : <    %s    >", niveaudiff);
+
+    	difficulte = TTF_RenderText_Solid(policetxt, txtdiff, couleurtxt);
+
+
+        position.x = ecran->w/16;
+        position.y = ecran->h/20;
+        SDL_BlitSurface(titre, NULL, ecran, &position);
+
+        position.x = ecran->w/10;
+        position.y = ecran->h/2.5;
+        SDL_BlitSurface(taille, NULL, ecran, &position);
+
+        position.x = ecran->w/10;
+        position.y = 2*ecran->h/3.2;
+        SDL_BlitSurface(difficulte, NULL, ecran, &position);
+
+
+        position.x = ecran->w/5;
+        position.y = ecran->h-45;
+        SDL_BlitSurface(TTF_RenderText_Solid(policetxt, "Demarrer", couleurtxt), NULL, ecran, &position);
+
+        position.x = 2*ecran->w/3;
+        position.y = ecran->h-45;
+        SDL_BlitSurface(TTF_RenderText_Solid(policetxt, "Quitter", couleurtxt), NULL, ecran, &position);
+
+
+
+        SDL_Flip(ecran);
+    }
+
+    TTF_CloseFont(policetitre);
+    TTF_CloseFont(policetxt);
+    return 1;
+}
 
 int getsValue(char* str, int min) {
     int res = 0;
@@ -29,7 +175,7 @@ SDL_Surface* initSDLwindow(int width, int height){
         fprintf( stderr, "Video initialization failed: %s\n", SDL_GetError( ) );
         SDL_Quit();
     }
-    SDL_Surface *screen = SDL_SetVideoMode(width, height, 32, SDL_HWSURFACE | SDL_RESIZABLE);
+    SDL_Surface *screen = SDL_SetVideoMode(width, height, 32, SDL_HWSURFACE);
 
     fillScreen(screen, 30, 30, 30);
     SDL_WM_SetCaption("Color Flood Equilibre", NULL);
@@ -38,12 +184,12 @@ SDL_Surface* initSDLwindow(int width, int height){
     return screen;
 }
 
-void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, int b) {
+void drawRectangle(SDL_Surface *ecran, int px, int py, int sizew, int sizeh, int r, int g, int b) {
     SDL_Rect rect;
     rect.x = px;
     rect.y = py;
-    rect.h = size;
-    rect.w = size;
+    rect.h = sizeh;
+    rect.w = sizew;
     SDL_FillRect(ecran, &rect, SDL_MapRGB(ecran->format, r, g, b));
 }
 
@@ -66,27 +212,27 @@ void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark) {
             switch(mat[i][j]) {
                 case 1 :
                     /* RED */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 201-dark, 20-dark, 24-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, rectsize, 201-dark, 20-dark, 24-dark);
                     break;
                 case 2 :
                     /* GREEN */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 77-dark, 142-dark, 21-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, rectsize, 77-dark, 142-dark, 21-dark);
                     break;              
                 case 3 :
                     /* YELLOW */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 194-dark, 143-dark, 20-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, rectsize, 194-dark, 143-dark, 20-dark);
                     break;
                 case 4:
                     /* BLUE */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 45-dark, 85-dark, 220-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, rectsize, 45-dark, 85-dark, 220-dark);
                     break;
                 case 5 :
                     /* MAGENTA */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 116-dark, 76-dark, 112-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, rectsize, 116-dark, 76-dark, 112-dark);
                     break;
                 case 6 :
                     /* CYAN */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 23-dark, 150-dark, 150-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, rectsize, 23-dark, 150-dark, 150-dark);
                     break;
                 default:
                     printf("error\n");
@@ -172,25 +318,25 @@ void affiche_win(SDL_Surface *ecran,int size, int couleur){
         }
         for (int i = 0; i < 3; ++i)
         {
-            drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);
-            drawRectangle(ecran, x+4*sizeSquare, y+i*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);        
+            drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);
+            drawRectangle(ecran, x+4*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);        
         }
-        drawRectangle(ecran, x+sizeSquare/2+5, y+3*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
-        drawRectangle(ecran, x+sizeSquare+5, y+4*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
-        drawRectangle(ecran, x+sizeSquare*2, y+3*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
-        drawRectangle(ecran, x+sizeSquare*3-5, y+4*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
-        drawRectangle(ecran, x+sizeSquare*7/2-5, y+3*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
-        drawRectangle(ecran, x+sizeSquare*2, y+2*sizeSquare+12, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare/2+5, y+3*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare+5, y+4*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare*2, y+3*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare*3-5, y+4*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare*7/2-5, y+3*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare*2, y+2*sizeSquare+12, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
 
         for (int i = 0; i < 5; ++i)
         {
-             drawRectangle(ecran, x+6*sizeSquare, y+i*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
-             drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
-             drawRectangle(ecran, x+12*sizeSquare, y+i*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+             drawRectangle(ecran, x+6*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+             drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+             drawRectangle(ecran, x+12*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
         }
-             drawRectangle(ecran, x+9*sizeSquare, y+sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
-             drawRectangle(ecran, x+10*sizeSquare, y+2*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);
-             drawRectangle(ecran, x+11*sizeSquare, y+3*sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);
+             drawRectangle(ecran, x+9*sizeSquare, y+sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+             drawRectangle(ecran, x+10*sizeSquare, y+2*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);
+             drawRectangle(ecran, x+11*sizeSquare, y+3*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);
 
         SDL_Flip(ecran);
         nanosleep((const struct timespec[]){{0, 10000000L}}, NULL);
@@ -248,34 +394,34 @@ void affiche_lose(SDL_Surface *ecran,int size){
         }
         for (int i = 0; i < 7; ++i)
         {
-            drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, r, g ,b);                   //L
+            drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, sizeSquare, r, g ,b);                   //L
     
-            drawRectangle(ecran, x+5*sizeSquare, y+i*sizeSquare, sizeSquare, r, g ,b);      //O 
-            drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, r, g ,b);    
+            drawRectangle(ecran, x+5*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      //O 
+            drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, r, g ,b);    
     
-            drawRectangle(ecran, x+15*sizeSquare, y+i*sizeSquare, sizeSquare, r, g ,b);      //E    
+            drawRectangle(ecran, x+15*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      //E    
         }
     
         for (int i = 0; i < 4; ++i)
         {
-            drawRectangle(ecran, x+i*sizeSquare, y+6*sizeSquare, sizeSquare, r, g ,b);      //L
+            drawRectangle(ecran, x+i*sizeSquare, y+6*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      //L
     
-            drawRectangle(ecran, x+(i+5)*sizeSquare, y, sizeSquare, r, g ,b);               //0
-            drawRectangle(ecran, x+(i+5)*sizeSquare, y+6*sizeSquare, sizeSquare, r, g ,b); 
+            drawRectangle(ecran, x+(i+5)*sizeSquare, y, sizeSquare, sizeSquare, r, g ,b);               //0
+            drawRectangle(ecran, x+(i+5)*sizeSquare, y+6*sizeSquare, sizeSquare, sizeSquare, r, g ,b); 
     
-            drawRectangle(ecran, x+(i+10)*sizeSquare, y, sizeSquare, r, g ,b);              //S
-            drawRectangle(ecran, x+(i+10)*sizeSquare, y+3*sizeSquare, sizeSquare, r, g ,b);      
-            drawRectangle(ecran, x+(i+10)*sizeSquare, y+6*sizeSquare, sizeSquare, r, g ,b);    
-            drawRectangle(ecran, x+10*sizeSquare, y+i*sizeSquare, sizeSquare, r, g , b);      
-            drawRectangle(ecran, x+13*sizeSquare, y+(i+3)*sizeSquare, sizeSquare, r, g ,b);      
+            drawRectangle(ecran, x+(i+10)*sizeSquare, y, sizeSquare, sizeSquare, r, g ,b);              //S
+            drawRectangle(ecran, x+(i+10)*sizeSquare, y+3*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      
+            drawRectangle(ecran, x+(i+10)*sizeSquare, y+6*sizeSquare, sizeSquare, sizeSquare, r, g ,b);    
+            drawRectangle(ecran, x+10*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, r, g , b);      
+            drawRectangle(ecran, x+13*sizeSquare, y+(i+3)*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      
     
-            drawRectangle(ecran, x+(i+15)*sizeSquare, y, sizeSquare, r, g ,b);              //E     
-            drawRectangle(ecran, x+(i+15)*sizeSquare, y+6*sizeSquare, sizeSquare, r, g ,b);      
+            drawRectangle(ecran, x+(i+15)*sizeSquare, y, sizeSquare, sizeSquare, r, g ,b);              //E     
+            drawRectangle(ecran, x+(i+15)*sizeSquare, y+6*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      
         }
     
         for (int i = 0; i < 3; ++i)
         {
-            drawRectangle(ecran, x+(i+15)*sizeSquare, y+3*sizeSquare, sizeSquare, r, g ,b);      
+            drawRectangle(ecran, x+(i+15)*sizeSquare, y+3*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      
         }
         SDL_Flip(ecran);
         nanosleep((const struct timespec[]){{0, 20000000L}}, NULL);

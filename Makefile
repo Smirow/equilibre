@@ -24,7 +24,7 @@ CFLAGSTEST = -L $(HOME)/local/lib
 app: $(APP)
 
 $(APP): $(COBJMAIN) $(COBJ)
-	$(CC) $(CFLAGS) -o $(APP) $(COBJMAIN) $(COBJ) `sdl-config --cflags --libs` -lSDL 
+	$(CC) $(CFLAGS) -o $(APP) $(COBJMAIN) $(COBJ) `sdl-config --cflags --libs` -lSDL -lSDL_ttf
 
 $(COBJMAIN): $(CSRC) $(CHDR) $(OBJDIR)
 	$(CC) $(CFLAGS) -o $(OBJDIR)/main.o -c $(SRCDIR)/main.c 
@@ -42,7 +42,7 @@ $(OBJDIR):
 test: $(TEST)
 
 $(TEST): $(COBJTEST) $(COBJ)
-	$(CC) $(CFLAGSTEST) -o $(TEST) $(COBJTEST) $(COBJ) `sdl-config --cflags --libs` -lSDL -lcunit
+	$(CC) $(CFLAGSTEST) -o $(TEST) $(COBJTEST) $(COBJ) `sdl-config --cflags --libs` -lSDL -lSDL_ttf -lcunit
 
 $(COBJTEST): $(CSRCTEST) $(CHDRTEST) $(TESTDIR)/$(OBJDIR)
 	$(CC) $(CFLAGS) -o $(TESTDIR)/$(OBJDIR)/main.o -c $(TESTDIR)/main.c
