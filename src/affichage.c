@@ -11,12 +11,12 @@
 
 
 int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
-	SDL_Surface *titre=NULL, *taille=NULL, *difficulte=NULL;
+	SDL_Surface *titre=NULL, *taille=NULL, *difficulte=NULL, *fleched=NULL;
     SDL_Rect position;
     SDL_Event event;
     SDL_Color couleurtxt = {255, 255, 255, 0}; //le 0 enlève un warning
     char txttaille[100], txtdiff[100], niveaudiff[50];
-    int vardiff=0, positionmenu_x=0, positionmenu_y=0;
+    int vardiff=0, vartaille=0, positionmenu_x=0, positionmenu_y=0;
 
 	TTF_Font *policetitre = NULL, *policetxt=NULL;
 
@@ -45,13 +45,13 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 	            		break;
 	            	case SDLK_UP:
 	            		positionmenu_y--;
-	            		if(positionmenu_y==-1)
+	            		if(positionmenu_y<0)
 	            			positionmenu_y=2;
     					fillScreen(ecran, 30, 30, 30);
 	            		break;
 	            	case SDLK_DOWN:
 	            		positionmenu_y++;
-	            		if(positionmenu_y==3)
+	            		if(positionmenu_y>2)
 	            			positionmenu_y=0;
     					fillScreen(ecran, 30, 30, 30);
 	            		break;
@@ -59,22 +59,34 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 	            		switch(positionmenu_y)
 	            		{
 	            			case 0:
+	            				vartaille--;
+	            				if(vartaille<0)
+	            					vartaille=3;
 	            				break;
 	            			case 1:
+	            				vardiff--;
+	            				if(vardiff<0)
+	            					vardiff=3;
 	            				break;
 		            		case 2:
 			            		positionmenu_x++;
 			            		positionmenu_x%=2;
 			            		break;
 	            		}
-   						fillScreen(ecran, 30, 30, 30);
+   						fillScreen(ecran, 30, 30, 30); //pour rafraichir l'ecran lorsque le rectangle gris change de place
 	            		break;
 	            	case SDLK_RIGHT:
 	            		switch(positionmenu_y)
 	            		{
 	            			case 0:
+	            				vartaille++;
+	            				if(vartaille>3)
+	            					vartaille=0;
 	            				break;
 	            			case 1:
+	            				vardiff++;
+	            				if(vardiff>3)
+	            					vardiff=0;
 	            				break;
 		            		case 2:
 			            		positionmenu_x++;
@@ -87,24 +99,84 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 	            		break;
 		        }
             	break;
+            case SDL_MOUSEBUTTONUP:
+        		if (event.button.button == SDL_BUTTON_LEFT)
+        		{
+        			printf("x : %d y: %d\n", event.button.x, event.button.y);
+        			if(event.button.x>146 && event.button.x<181 && event.button.y>200 && event.button.y<235) //reduire la taille
+        			{
+        				positionmenu_y=0;
+        				vartaille--;
+        				if(vartaille<0)
+        					vartaille=3;
+        			}
+        			else if(event.button.x>390 && event.button.x<425 && event.button.y>200 && event.button.y<235) //augmenter la taille
+        			{
+        				positionmenu_y=0;
+        				vartaille++;
+        				if(vartaille>3)
+        					vartaille=0;
+        			}
+        			else if(event.button.x>194 && event.button.x<229 && event.button.y>314 && event.button.y<349) //reduire la difficulté
+        			{
+        				positionmenu_y=1;
+        				vardiff--;
+        				if(vardiff<0)
+        					vardiff=3;
+        			}
+        			else if(event.button.x>469 && event.button.x<504 && event.button.y>314 && event.button.y<349) //augmenter la difficulté
+        			{
+        				positionmenu_y=1;
+        				vardiff++;
+        				if(vardiff>3)
+        					vardiff=0;
+        			} 
+        			else if(event.button.x>80 && event.button.x<235 && event.button.y>450 && event.button.y<500) //démarrer
+        				return 1;
+        			else if(event.button.x>325 && event.button.x<445 && event.button.y>450 && event.button.y<500) //quitter
+        				return 0;
+    				fillScreen(ecran, 30, 30, 30);
+
+        		}
+        		break;
 
         }
 
-        sprintf(txttaille, "Taille : <      %d*%d         >", *size, *size);
+        switch(vartaille)
+   		{
+   			case 0:
+   				*size=12;
+   				break;
+   			case 1:
+   				*size=18;
+   				break;
+   			case 2:
+   				*size=24;
+   				break;
+   			case 3:
+   				*size=8;
+   				break;
+   		}
+
+        sprintf(txttaille, "Taille   <         %d*%d", *size, *size);
+        if(vartaille==3)
+        {
+        	sprintf(txttaille, "Taille   <   Personnalisee");
+    	}
    		taille = TTF_RenderText_Solid(policetxt, txttaille, couleurtxt);
 
    		switch(vardiff)
    		{
    			case 0:
-   				sprintf(niveaudiff, "Sans pression");
+   				sprintf(niveaudiff, " Sans pression");
    				*maxCoups=nbCoupsSolveur+100;
    				break;
    			case 1:
-   				sprintf(niveaudiff, "Facile");
+   				sprintf(niveaudiff, "      Facile");
    				*maxCoups=nbCoupsSolveur+5;
    				break;
    			case 2:
-   				sprintf(niveaudiff, "Difficile");
+   				sprintf(niveaudiff, "     Difficile");
    				*maxCoups=nbCoupsSolveur+2;
    				break;
    			case 3:
@@ -112,15 +184,28 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
    				*maxCoups=nbCoupsSolveur;
    				break;
    		}
+    	drawRectangle(ecran, 146, 200, 35, 35, 60, 60, 60); //carré gris de la fleche gauche de Taille
+    	drawRectangle(ecran, 390, 200, 35, 35, 60, 60, 60); //carré gris de la fleche droite de Taille
+    	drawRectangle(ecran, 194, 314, 35, 35, 60, 60, 60); //carré gris de la fleche gauche de Difficulté
+    	drawRectangle(ecran, 469, 314, 35, 35, 60, 60, 60); //carré gris de la fleche droite de Difficulté
+    	drawRectangle(ecran, ecran->w/1.55, ecran->h-50, 120, 45, 60, 60, 60); //carré gris Démarrer
+    	drawRectangle(ecran, ecran->w/6, ecran->h-50, 150, 45, 60, 60, 60); //carré gris Quitter
 
-        if(positionmenu_x==0) //affichage des rectangles gris en fonction de la position dans le menu
-        	drawRectangle(ecran, ecran->w/6, ecran->h-50, 150, 45, 60, 60, 60);
+        if(positionmenu_x==0 && positionmenu_y==2) //affichage des rectangles gris en fonction de la position dans le menu
+        	drawRectangle(ecran, ecran->w/6, ecran->h-50, 150, 45, 100, 100, 100);
+        else if(positionmenu_y==2)
+        	drawRectangle(ecran, ecran->w/1.55, ecran->h-50, 120, 45, 100, 100, 100);
+        else if(positionmenu_y==1)
+        	drawRectangle(ecran, ecran->w/10-8, 2*ecran->h/3.2-7, 144, 45, 100, 100, 100);
         else
-        	drawRectangle(ecran, ecran->w/1.55, ecran->h-50, 120, 45, 60, 60, 60);
+        	drawRectangle(ecran, ecran->w/10-8, ecran->h/2.5-7, 95, 45, 100, 100, 100);
 
-        sprintf(txtdiff, "Difficulte : <    %s    >", niveaudiff);
+
+
+        sprintf(txtdiff, "Difficulte   <    %s", niveaudiff);
 
     	difficulte = TTF_RenderText_Solid(policetxt, txtdiff, couleurtxt);
+    	fleched = TTF_RenderText_Solid(policetxt, ">", couleurtxt);
 
 
         position.x = ecran->w/16;
@@ -130,10 +215,14 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
         position.x = ecran->w/10;
         position.y = ecran->h/2.5;
         SDL_BlitSurface(taille, NULL, ecran, &position);
+        position.x = ecran->w-100;
+        SDL_BlitSurface(fleched, NULL, ecran, &position);
 
         position.x = ecran->w/10;
         position.y = 2*ecran->h/3.2;
         SDL_BlitSurface(difficulte, NULL, ecran, &position);
+        position.x = ecran->w-20;
+        SDL_BlitSurface(fleched, NULL, ecran, &position);
 
 
         position.x = ecran->w/5;
