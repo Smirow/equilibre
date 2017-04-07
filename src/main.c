@@ -32,7 +32,7 @@ int main() {
 	    exit(EXIT_FAILURE);
 	}
 
-    size = /*getsValue("Entrez la taille de la grille: ", 1)*/ 8;
+    size = /*getsValue("Entrez la taille de la grille: ", 1)*/ 12;
     maxCoups = /*getsValue("Entrez un nombre maximum de coups: ", 1)*/ 15;
 	nbCoupsSolveur=15;
     SDL_Surface *screen = initSDLwindow(504, 504);

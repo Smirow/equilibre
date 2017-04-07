@@ -15,7 +15,7 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
     SDL_Rect position;
     SDL_Event event;
     SDL_Color couleurtxt = {255, 255, 255, 0}; //le 0 enlève un warning
-    char txttaille[100], txtdiff[100], niveaudiff[50];
+    char txttaille[100], txtdiff[100], niveaudiff[50], strtaille[2]="";
     int vardiff=0, vartaille=0, positionmenu_x=0, positionmenu_y=0;
 
 	TTF_Font *policetitre = NULL, *policetxt=NULL;
@@ -23,6 +23,8 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
     policetitre = TTF_OpenFont("Symtext.ttf", 30);
     policetxt = TTF_OpenFont("Symtext.ttf", 20);
     titre = TTF_RenderText_Solid(policetitre, "Color Flood - Equilibre", couleurtxt);
+
+    SDL_EnableUNICODE(SDL_ENABLE);
 
 
     int continuer=1, quitter=1;
@@ -100,76 +102,110 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 	            	default:
 	            		break;
 		        }
-            	break;
-            case SDL_MOUSEBUTTONUP:
-        		if (event.button.button == SDL_BUTTON_LEFT)
-        		{
-        			if(event.button.x>146 && event.button.x<181 && event.button.y>200 && event.button.y<235) //reduire la taille
-        			{
-        				positionmenu_y=0;
-        				vartaille--;
-        				if(vartaille<0)
-        					vartaille=3;
-        			}
-        			else if(event.button.x>390 && event.button.x<425 && event.button.y>200 && event.button.y<235) //augmenter la taille
-        			{
-        				positionmenu_y=0;
-        				vartaille++;
-        				if(vartaille>3)
-        					vartaille=0;
-        			}
-        			else if(event.button.x>194 && event.button.x<229 && event.button.y>314 && event.button.y<349) //reduire la difficulté
-        			{
-        				positionmenu_y=1;
-        				vardiff--;
-        				if(vardiff<0)
-        					vardiff=3;
-        			}
-        			else if(event.button.x>469 && event.button.x<504 && event.button.y>314 && event.button.y<349) //augmenter la difficulté
-        			{
-        				positionmenu_y=1;
-        				vardiff++;
-        				if(vardiff>3)
-        					vardiff=0;
-        			} 
-        			else if(event.button.x>80 && event.button.x<235 && event.button.y>450 && event.button.y<500) //démarrer
-        				return 1;
-        			else if(event.button.x>325 && event.button.x<445 && event.button.y>450 && event.button.y<500) //quitter
-        				return 0;
-    				fillScreen(ecran, rand()%255, rand()%255, rand()%255);
 
-        		}
-        		break;
+                if(vartaille==3)
+                {
+                    for(int k=48 ; k<58 ; k++) //48 : code ASCII du 0, 57 : code ASCII de 9
+                    {
+                        int lgrstr=strlen(strtaille);
+                        if(event.key.keysym.unicode == k)
+                        {   
+                            if(lgrstr<2)
+                            {
+                                strtaille[lgrstr]=(char)event.key.keysym.unicode;
+                                strtaille[lgrstr+1]=0;
+                            }
+                            fillScreen(ecran, rand()%255, rand()%255, rand()%255);
+                        }
+                        if(event.key.keysym.sym == SDLK_BACKSPACE)
+                        {
+                            if(lgrstr>0)
+                            {
+                                strcpy(strtaille, "");
+                                fillScreen(ecran, rand()%255, rand()%255, rand()%255);
+                            }
+                        }
+                    }
+                }
+                else
+                    strcpy(strtaille, "");
+                break;
+            case SDL_MOUSEBUTTONUP:
+                if (event.button.button == SDL_BUTTON_LEFT)
+                {
+                    if(event.button.x>146 && event.button.x<181 && event.button.y>200 && event.button.y<235) //reduire la taille
+                    {
+                        positionmenu_y=0;
+                        vartaille--;
+                        if(vartaille<0)
+                            vartaille=3;
+                    }
+                    else if(event.button.x>390 && event.button.x<425 && event.button.y>200 && event.button.y<235) //augmenter la taille
+                    {
+                        positionmenu_y=0;
+                        vartaille++;
+                        if(vartaille>3)
+                            vartaille=0;
+                    }
+                    else if(event.button.x>194 && event.button.x<229 && event.button.y>314 && event.button.y<349) //reduire la difficulté
+                    {
+                        positionmenu_y=1;
+                        vardiff--;
+                        if(vardiff<0)
+                            vardiff=3;
+                    }
+                    else if(event.button.x>469 && event.button.x<504 && event.button.y>314 && event.button.y<349) //augmenter la difficulté
+                    {
+                        positionmenu_y=1;
+                        vardiff++;
+                        if(vardiff>3)
+                            vardiff=0;
+                    } 
+                    else if(event.button.x>80 && event.button.x<235 && event.button.y>450 && event.button.y<500) //démarrer
+                        return 1;
+                    else if(event.button.x>325 && event.button.x<445 && event.button.y>450 && event.button.y<500) //quitter
+                        return 0;
+                    fillScreen(ecran, rand()%255, rand()%255, rand()%255);
+
+                }
+                break;
 
         }
 
         switch(vartaille)
-   		{
-   			case 0:
-   				*size=12;
-   				break;
-   			case 1:
-   				*size=18;
-   				break;
-   			case 2:
-   				*size=24;
-   				break;
-   			case 3:
-   				*size=8;
-   				break;
-   		}
-
-        sprintf(txttaille, "Taille   <         %d*%d", *size, *size);
-        if(vartaille==3)
         {
-        	sprintf(txttaille, "Taille   <   Personnalisee");
-    	}
-   		taille = TTF_RenderText_Solid(policetxt, txttaille, couleurtxt);
+            case 0:
+                *size=12;
+                break;
+            case 1:
+                *size=18;
+                break;
+            case 2:
+                *size=24;
+                break;
+            default:
+                break;
+        }
 
-   		switch(vardiff)
-   		{
-   			case 0:
-   				sprintf(niveaudiff, " Sans pression");
+        if(!strcmp(strtaille, "") && vartaille==3)
+            sprintf(txttaille, "Taille   <   Personnalisee"); //à blit
+        else if(vartaille!=3)
+            sprintf(txttaille, "Taille   <         %d*%d", *size, *size);
+        else
+        {
+            if(atoi(strtaille)>24)
+                *size=24;
+            else
+                *size=atoi(strtaille);
+            sprintf(txttaille, "Taille   <         %d*%d", *size, *size);
+        }
+
+        taille = TTF_RenderText_Solid(policetxt, txttaille, couleurtxt);
+
+        switch(vardiff)
+        {
+            case 0:
+                sprintf(niveaudiff, " Sans pression");
    				*maxCoups=nbCoupsSolveur+100;
    				break;
    			case 1:
@@ -237,6 +273,7 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 
         SDL_Flip(ecran);
     }
+    SDL_EnableUNICODE(SDL_DISABLE);  
 
     TTF_CloseFont(policetitre);
     TTF_CloseFont(policetxt);
