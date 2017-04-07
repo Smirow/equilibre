@@ -45,15 +45,17 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 	            		break;
 	            	case SDLK_UP:
 	            		positionmenu_y--;
+                        positionmenu_x=0;
 	            		if(positionmenu_y<0)
 	            			positionmenu_y=2;
-    					fillScreen(ecran, 30, 30, 30);
+    					fillScreen(ecran, rand()%255, rand()%255, rand()%255);
 	            		break;
 	            	case SDLK_DOWN:
 	            		positionmenu_y++;
+                        positionmenu_x=0;
 	            		if(positionmenu_y>2)
 	            			positionmenu_y=0;
-    					fillScreen(ecran, 30, 30, 30);
+    					fillScreen(ecran, rand()%255, rand()%255, rand()%255);
 	            		break;
 	            	case SDLK_LEFT:
 	            		switch(positionmenu_y)
@@ -73,7 +75,7 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 			            		positionmenu_x%=2;
 			            		break;
 	            		}
-   						fillScreen(ecran, 30, 30, 30); //pour rafraichir l'ecran lorsque le rectangle gris change de place
+   						fillScreen(ecran, rand()%255, rand()%255, rand()%255); //pour rafraichir l'ecran lorsque le rectangle gris change de place
 	            		break;
 	            	case SDLK_RIGHT:
 	            		switch(positionmenu_y)
@@ -93,7 +95,7 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 			            		positionmenu_x%=2;
 			            		break;
 			            }
-    					fillScreen(ecran, 30, 30, 30);
+    					fillScreen(ecran, rand()%255, rand()%255, rand()%255);
 	            		break;
 	            	default:
 	            		break;
@@ -102,7 +104,6 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
             case SDL_MOUSEBUTTONUP:
         		if (event.button.button == SDL_BUTTON_LEFT)
         		{
-        			printf("x : %d y: %d\n", event.button.x, event.button.y);
         			if(event.button.x>146 && event.button.x<181 && event.button.y>200 && event.button.y<235) //reduire la taille
         			{
         				positionmenu_y=0;
@@ -135,7 +136,7 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
         				return 1;
         			else if(event.button.x>325 && event.button.x<445 && event.button.y>450 && event.button.y<500) //quitter
         				return 0;
-    				fillScreen(ecran, 30, 30, 30);
+    				fillScreen(ecran, rand()%255, rand()%255, rand()%255);
 
         		}
         		break;
@@ -199,7 +200,6 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
         	drawRectangle(ecran, ecran->w/10-8, 2*ecran->h/3.2-7, 144, 45, 100, 100, 100);
         else
         	drawRectangle(ecran, ecran->w/10-8, ecran->h/2.5-7, 95, 45, 100, 100, 100);
-
 
 
         sprintf(txtdiff, "Difficulte   <    %s", niveaudiff);
