@@ -11,17 +11,18 @@
 
 
 int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
-	SDL_Surface *titre=NULL, *taille=NULL, *difficulte=NULL, *fleched=NULL;
+	SDL_Surface *titre=NULL;
     SDL_Rect position;
     SDL_Event event;
     SDL_Color couleurtxt = {255, 255, 255, 0}; //le 0 enlève un warning
-    char txttaille[100], txtdiff[100], niveaudiff[50], strtaille[2]="";
+    char txttaille[100], txtdiff[100], niveaudiff[50], strtaille[2]="", strinstructions[100]="";
     int vardiff=0, vartaille=0, positionmenu_x=0, positionmenu_y=0;
 
-	TTF_Font *policetitre = NULL, *policetxt=NULL;
+	TTF_Font *policetitre = NULL, *policetxt=NULL, *policeinstructions=NULL;
 
     policetitre = TTF_OpenFont("Symtext.ttf", 30);
     policetxt = TTF_OpenFont("Symtext.ttf", 20);
+    policeinstructions = TTF_OpenFont("Symtext.ttf", 12);
     titre = TTF_RenderText_Solid(policetitre, "Color Flood - Equilibre", couleurtxt);
 
     SDL_EnableUNICODE(SDL_ENABLE);
@@ -188,9 +189,15 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
         }
 
         if(!strcmp(strtaille, "") && vartaille==3)
+        {
             sprintf(txttaille, "Taille   <   Personnalisee"); //à blit
+            strcpy(strinstructions, "Entrez une taille entre 2*2 et 24*24");
+        }
         else if(vartaille!=3)
+        {
             sprintf(txttaille, "Taille   <         %d*%d", *size, *size);
+            strcpy(strinstructions, "");
+        }
         else
         {
             if(atoi(strtaille)>24)
@@ -198,9 +205,10 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
             else
                 *size=atoi(strtaille);
             sprintf(txttaille, "Taille   <         %d*%d", *size, *size);
+            strcpy(strinstructions, "Appuyez sur BACKSPACE pour effacer");
         }
 
-        taille = TTF_RenderText_Solid(policetxt, txttaille, couleurtxt);
+        
 
         switch(vardiff)
         {
@@ -240,25 +248,24 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 
         sprintf(txtdiff, "Difficulte   <    %s", niveaudiff);
 
-    	difficulte = TTF_RenderText_Solid(policetxt, txtdiff, couleurtxt);
-    	fleched = TTF_RenderText_Solid(policetxt, ">", couleurtxt);
-
-
         position.x = ecran->w/16;
         position.y = ecran->h/20;
         SDL_BlitSurface(titre, NULL, ecran, &position);
 
         position.x = ecran->w/10;
         position.y = ecran->h/2.5;
-        SDL_BlitSurface(taille, NULL, ecran, &position);
+        SDL_BlitSurface(TTF_RenderText_Solid(policetxt, txttaille, couleurtxt), NULL, ecran, &position);
         position.x = ecran->w-100;
-        SDL_BlitSurface(fleched, NULL, ecran, &position);
+        SDL_BlitSurface(TTF_RenderText_Solid(policetxt, ">", couleurtxt), NULL, ecran, &position);
+        position.x = ecran->w/7;
+        position.y = ecran->h/2.1;
+        SDL_BlitSurface(TTF_RenderText_Solid(policeinstructions, strinstructions, couleurtxt), NULL, ecran, &position);
 
         position.x = ecran->w/10;
         position.y = 2*ecran->h/3.2;
-        SDL_BlitSurface(difficulte, NULL, ecran, &position);
+        SDL_BlitSurface(TTF_RenderText_Solid(policetxt, txtdiff, couleurtxt), NULL, ecran, &position);
         position.x = ecran->w-20;
-        SDL_BlitSurface(fleched, NULL, ecran, &position);
+        SDL_BlitSurface(TTF_RenderText_Solid(policetxt, ">", couleurtxt), NULL, ecran, &position);
 
 
         position.x = ecran->w/5;
@@ -277,6 +284,8 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 
     TTF_CloseFont(policetitre);
     TTF_CloseFont(policetxt);
+    if(*size==1)
+        *size=2;   //Empeche d'avoir un tableau 1*1
     return 1;
 }
 
