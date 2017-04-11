@@ -284,8 +284,6 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 
     TTF_CloseFont(policetitre);
     TTF_CloseFont(policetxt);
-    if(*size==1)
-        *size=2;   //Empeche d'avoir un tableau 1*1
     return 1;
 }
 

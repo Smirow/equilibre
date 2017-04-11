@@ -39,6 +39,8 @@ int main() {
 
     if(menu(screen, &size, &maxCoups, nbCoupsSolveur))
     {
+    	if(size==1)	//empeche le tableau d'être de taille 1*1
+    		size=2;
         screen = SDL_SetVideoMode(504, 504, 32, SDL_HWSURFACE | SDL_RESIZABLE); //pour pouvoir redimensionner la fenetre apres le menu
 
 	    Matrix matrixNoGame = initMatrix(size);
