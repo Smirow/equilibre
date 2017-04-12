@@ -19,6 +19,7 @@ int main() {
     int PLAY = 0;
     int size = 0;
     int boolwin = 0;
+    int CoupsSuppl = 0;
     int maxCoups = 0;
     int nbCoups = 0;
     int restart = 0;
@@ -37,10 +38,11 @@ int main() {
 	nbCoupsSolveur=15;
     SDL_Surface *screen = initSDLwindow(504, 504);
 
-    if(menu(screen, &size, &maxCoups, nbCoupsSolveur))
+    if(menu(screen, &size, &CoupsSuppl))
     {
     	if(size==1)	//empeche le tableau d'être de taille 1*1
     		size=2;
+    	
         screen = SDL_SetVideoMode(504, 504, 32, SDL_HWSURFACE | SDL_RESIZABLE); //pour pouvoir redimensionner la fenetre apres le menu
 
 	    Matrix matrixNoGame = initMatrix(size);
@@ -50,6 +52,7 @@ int main() {
 
 	    printMatrixSDL(matrix, size, screen, 0);
 	    
+	    maxCoups=CoupsSuppl+nbCoupsSolveur;
 
 	    SDL_Event event;
 	    char buf[100];

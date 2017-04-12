@@ -10,7 +10,7 @@
 
 
 
-int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
+int menu(SDL_Surface *ecran, int *size, int *CoupsSuppl) {
 	SDL_Surface *titre=NULL;
     SDL_Rect position;
     SDL_Event event;
@@ -29,17 +29,14 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 
 
     int continuer=1, quitter=1;
-    while (continuer && quitter)
-    {
+    while (continuer && quitter) {
         SDL_WaitEvent(&event);
-        switch(event.type)
-        {
+        switch(event.type) {
             case SDL_QUIT:
                 return 0;
                 break;
             case SDL_KEYDOWN:
-            	switch(event.key.keysym.sym)
-            	{
+            	switch(event.key.keysym.sym) {
             		case SDLK_RETURN:
             			if(positionmenu_x==0)
 	            			return 1;
@@ -61,8 +58,7 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
     					fillScreen(ecran, rand()%255, rand()%255, rand()%255);
 	            		break;
 	            	case SDLK_LEFT:
-	            		switch(positionmenu_y)
-	            		{
+	            		switch(positionmenu_y) {
 	            			case 0:
 	            				vartaille--;
 	            				if(vartaille<0)
@@ -81,8 +77,7 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
    						fillScreen(ecran, rand()%255, rand()%255, rand()%255); //pour rafraichir l'ecran lorsque le rectangle gris change de place
 	            		break;
 	            	case SDLK_RIGHT:
-	            		switch(positionmenu_y)
-	            		{
+	            		switch(positionmenu_y) {
 	            			case 0:
 	            				vartaille++;
 	            				if(vartaille>3)
@@ -104,14 +99,12 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 	            		break;
 		        }
 
-                if(vartaille==3)
-                {
-                    for(int k=48 ; k<58 ; k++) //48 : code ASCII du 0, 57 : code ASCII de 9
-                    {
+                if(vartaille==3) {
+                    for(int k=48 ; k<58 ; k++) { //48 : code ASCII du 0, 57 : code ASCII de 9 
                         int lgrstr=strlen(strtaille);
-                        if(event.key.keysym.unicode == k)
+                        if(event.key.keysym.unicode == k) 
                         {   
-                            if(lgrstr<2)
+                            if(lgrstr<2) 
                             {
                                 strtaille[lgrstr]=(char)event.key.keysym.unicode;
                                 strtaille[lgrstr+1]=0;
@@ -119,13 +112,11 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
                             fillScreen(ecran, rand()%255, rand()%255, rand()%255);
                         }
                         if(event.key.keysym.sym == SDLK_BACKSPACE)
-                        {
                             if(lgrstr>0)
                             {
                                 strcpy(strtaille, "");
                                 fillScreen(ecran, rand()%255, rand()%255, rand()%255);
                             }
-                        }
                     }
                 }
                 else
@@ -134,29 +125,25 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
             case SDL_MOUSEBUTTONUP:
                 if (event.button.button == SDL_BUTTON_LEFT)
                 {
-                    if(event.button.x>146 && event.button.x<181 && event.button.y>200 && event.button.y<235) //reduire la taille
-                    {
+                    if(event.button.x>146 && event.button.x<181 && event.button.y>200 && event.button.y<235) { //reduire la taille
                         positionmenu_y=0;
                         vartaille--;
                         if(vartaille<0)
                             vartaille=3;
                     }
-                    else if(event.button.x>390 && event.button.x<425 && event.button.y>200 && event.button.y<235) //augmenter la taille
-                    {
+                    else if(event.button.x>390 && event.button.x<425 && event.button.y>200 && event.button.y<235) { //augmenter la taille
                         positionmenu_y=0;
                         vartaille++;
                         if(vartaille>3)
                             vartaille=0;
                     }
-                    else if(event.button.x>194 && event.button.x<229 && event.button.y>314 && event.button.y<349) //reduire la difficulté
-                    {
+                    else if(event.button.x>194 && event.button.x<229 && event.button.y>314 && event.button.y<349) { //reduire la difficulté
                         positionmenu_y=1;
                         vardiff--;
                         if(vardiff<0)
                             vardiff=3;
                     }
-                    else if(event.button.x>469 && event.button.x<504 && event.button.y>314 && event.button.y<349) //augmenter la difficulté
-                    {
+                    else if(event.button.x>469 && event.button.x<504 && event.button.y>314 && event.button.y<349) { //augmenter la difficulté
                         positionmenu_y=1;
                         vardiff++;
                         if(vardiff>3)
@@ -173,8 +160,7 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 
         }
 
-        switch(vartaille)
-        {
+        switch(vartaille) {
             case 0:
                 *size=12;
                 break;
@@ -188,13 +174,11 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
                 break;
         }
 
-        if(!strcmp(strtaille, "") && vartaille==3)
-        {
+        if(!strcmp(strtaille, "") && vartaille==3) {
             sprintf(txttaille, "Taille   <   Personnalisee"); //à blit
             strcpy(strinstructions, "Entrez une taille entre 2*2 et 24*24");
         }
-        else if(vartaille!=3)
-        {
+        else if(vartaille!=3) {
             sprintf(txttaille, "Taille   <         %d*%d", *size, *size);
             strcpy(strinstructions, "");
         }
@@ -210,25 +194,25 @@ int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur) {
 
         
 
-        switch(vardiff)
-        {
+        switch(vardiff) {
             case 0:
                 sprintf(niveaudiff, " Sans pression");
-   				*maxCoups=nbCoupsSolveur+100;
+   				*CoupsSuppl=100;
    				break;
    			case 1:
    				sprintf(niveaudiff, "      Facile");
-   				*maxCoups=nbCoupsSolveur+5;
+   				*CoupsSuppl=5;
    				break;
    			case 2:
    				sprintf(niveaudiff, "     Difficile");
-   				*maxCoups=nbCoupsSolveur+2;
+   				*CoupsSuppl=2;
    				break;
    			case 3:
    				sprintf(niveaudiff, "Niveau solveur");
-   				*maxCoups=nbCoupsSolveur;
+   				*CoupsSuppl=0;
    				break;
    		}
+   		
     	drawRectangle(ecran, 146, 200, 35, 35, 60, 60, 60); //carré gris de la fleche gauche de Taille
     	drawRectangle(ecran, 390, 200, 35, 35, 60, 60, 60); //carré gris de la fleche droite de Taille
     	drawRectangle(ecran, 194, 314, 35, 35, 60, 60, 60); //carré gris de la fleche gauche de Difficulté

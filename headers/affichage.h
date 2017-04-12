@@ -1,7 +1,7 @@
 #ifndef __AFFICHAGE_H
 #define __AFFICHAGE_H
 
-int menu(SDL_Surface *ecran, int *size, int *maxCoups, int nbCoupsSolveur);
+int menu(SDL_Surface *ecran, int *size, int *CoupsSuppl);
 int getsValue(char* str, int min);
 SDL_Surface* initSDLwindow();
 void drawRectangle(SDL_Surface *ecran, int px, int py, int sizew, int sizeh, int r, int g, int b);
