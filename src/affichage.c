@@ -1,26 +1,276 @@
-/**
- * \file affichage.c
- * \brief Fonctionnalité S2 : SDL
- * \author Team Équilibre
- * \version 0.0.2
- * \date 10 Mars 2017
- */
 #include <string.h>
 #include <unistd.h>
 #include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
+#include <time.h>
 
 #include "../headers/file.h"
 #include "../headers/grille.h"
 #include "../headers/affichage.h"
 
-/**
- * \fn int getsValue(char* str, int min)
- * \brief Demande à l'utilisateur une valeur
- *
- * \param char* str Le message à affiché.
- * \param int min Le minimum de la valeur souhaité.
- * \return int la valeur entrée par l'utilisateur
- */
+
+
+int menu(SDL_Surface *ecran, int *size, int *CoupsSuppl) {
+	SDL_Surface *titre=NULL;
+    SDL_Rect position;
+    SDL_Event event;
+    SDL_Color couleurtxt = {255, 255, 255, 0}; //le 0 enlève un warning
+    char txttaille[100], txtdiff[100], niveaudiff[50], strtaille[2]="", strinstructions[100]="";
+    int vardiff=0, vartaille=0, positionmenu_x=0, positionmenu_y=0;
+
+	TTF_Font *policetitre = NULL, *policetxt=NULL, *policeinstructions=NULL;
+
+    policetitre = TTF_OpenFont("Symtext.ttf", 30);
+    policetxt = TTF_OpenFont("Symtext.ttf", 20);
+    policeinstructions = TTF_OpenFont("Symtext.ttf", 12);
+    titre = TTF_RenderText_Solid(policetitre, "Color Flood - Equilibre", couleurtxt);
+
+    SDL_EnableUNICODE(SDL_ENABLE);
+
+
+    int continuer=1, quitter=1;
+    while (continuer && quitter) {
+        SDL_WaitEvent(&event);
+        switch(event.type) {
+            case SDL_QUIT:
+                return 0;
+                break;
+            case SDL_KEYDOWN:
+            	switch(event.key.keysym.sym) {
+            		case SDLK_RETURN:
+            			if(positionmenu_x==0)
+	            			return 1;
+	            		else
+	            			return 0;
+	            		break;
+	            	case SDLK_UP:
+	            		positionmenu_y--;
+                        positionmenu_x=0;
+	            		if(positionmenu_y<0)
+	            			positionmenu_y=2;
+    					fillScreen(ecran, rand()%255, rand()%255, rand()%255);
+	            		break;
+	            	case SDLK_DOWN:
+	            		positionmenu_y++;
+                        positionmenu_x=0;
+	            		if(positionmenu_y>2)
+	            			positionmenu_y=0;
+    					fillScreen(ecran, rand()%255, rand()%255, rand()%255);
+	            		break;
+	            	case SDLK_LEFT:
+	            		switch(positionmenu_y) {
+	            			case 0:
+	            				vartaille--;
+	            				if(vartaille<0)
+	            					vartaille=3;
+	            				break;
+	            			case 1:
+	            				vardiff--;
+	            				if(vardiff<0)
+	            					vardiff=3;
+	            				break;
+		            		case 2:
+			            		positionmenu_x++;
+			            		positionmenu_x%=2;
+			            		break;
+	            		}
+   						fillScreen(ecran, rand()%255, rand()%255, rand()%255); //pour rafraichir l'ecran lorsque le rectangle gris change de place
+	            		break;
+	            	case SDLK_RIGHT:
+	            		switch(positionmenu_y) {
+	            			case 0:
+	            				vartaille++;
+	            				if(vartaille>3)
+	            					vartaille=0;
+	            				break;
+	            			case 1:
+	            				vardiff++;
+	            				if(vardiff>3)
+	            					vardiff=0;
+	            				break;
+		            		case 2:
+			            		positionmenu_x++;
+			            		positionmenu_x%=2;
+			            		break;
+			            }
+    					fillScreen(ecran, rand()%255, rand()%255, rand()%255);
+	            		break;
+	            	default:
+	            		break;
+		        }
+
+                if(vartaille==3) {
+                    for(int k=48 ; k<58 ; k++) { //48 : code ASCII du 0, 57 : code ASCII de 9 
+                        int lgrstr=strlen(strtaille);
+                        if(event.key.keysym.unicode == k) 
+                        {   
+                            if(lgrstr<2) 
+                            {
+                                strtaille[lgrstr]=(char)event.key.keysym.unicode;
+                                strtaille[lgrstr+1]=0;
+                            }
+                            fillScreen(ecran, rand()%255, rand()%255, rand()%255);
+                        }
+                        if(event.key.keysym.sym == SDLK_BACKSPACE)
+                            if(lgrstr>0)
+                            {
+                                strcpy(strtaille, "");
+                                fillScreen(ecran, rand()%255, rand()%255, rand()%255);
+                            }
+                    }
+                }
+                else
+                    strcpy(strtaille, "");
+                break;
+            case SDL_MOUSEBUTTONUP:
+                if (event.button.button == SDL_BUTTON_LEFT)
+                {
+                    if(event.button.x>146 && event.button.x<181 && event.button.y>200 && event.button.y<235) { //reduire la taille
+                        positionmenu_y=0;
+                        vartaille--;
+                        if(vartaille<0)
+                            vartaille=3;
+                    }
+                    else if(event.button.x>390 && event.button.x<425 && event.button.y>200 && event.button.y<235) { //augmenter la taille
+                        positionmenu_y=0;
+                        vartaille++;
+                        if(vartaille>3)
+                            vartaille=0;
+                    }
+                    else if(event.button.x>194 && event.button.x<229 && event.button.y>314 && event.button.y<349) { //reduire la difficulté
+                        positionmenu_y=1;
+                        vardiff--;
+                        if(vardiff<0)
+                            vardiff=3;
+                    }
+                    else if(event.button.x>469 && event.button.x<504 && event.button.y>314 && event.button.y<349) { //augmenter la difficulté
+                        positionmenu_y=1;
+                        vardiff++;
+                        if(vardiff>3)
+                            vardiff=0;
+                    } 
+                    else if(event.button.x>80 && event.button.x<235 && event.button.y>450 && event.button.y<500) //démarrer
+                        return 1;
+                    else if(event.button.x>325 && event.button.x<445 && event.button.y>450 && event.button.y<500) //quitter
+                        return 0;
+                    fillScreen(ecran, rand()%255, rand()%255, rand()%255);
+
+                }
+                break;
+
+        }
+
+        switch(vartaille) {
+            case 0:
+                *size=12;
+                break;
+            case 1:
+                *size=18;
+                break;
+            case 2:
+                *size=24;
+                break;
+            default:
+                break;
+        }
+
+        if(!strcmp(strtaille, "") && vartaille==3) {
+            sprintf(txttaille, "Taille   <   Personnalisee"); //à blit
+            strcpy(strinstructions, "Entrez une taille entre 2*2 et 24*24");
+        }
+        else if(vartaille!=3) {
+            sprintf(txttaille, "Taille   <         %d*%d", *size, *size);
+            strcpy(strinstructions, "");
+        }
+        else
+        {
+            if(atoi(strtaille)>24)
+                *size=24;
+            else
+                *size=atoi(strtaille);
+            sprintf(txttaille, "Taille   <         %d*%d", *size, *size);
+            strcpy(strinstructions, "Appuyez sur BACKSPACE pour effacer");
+        }
+
+        
+
+        switch(vardiff) {
+            case 0:
+                sprintf(niveaudiff, " Sans pression");
+   				*CoupsSuppl=100;
+   				break;
+   			case 1:
+   				sprintf(niveaudiff, "      Facile");
+   				*CoupsSuppl=5;
+   				break;
+   			case 2:
+   				sprintf(niveaudiff, "     Difficile");
+   				*CoupsSuppl=2;
+   				break;
+   			case 3:
+   				sprintf(niveaudiff, "Niveau solveur");
+   				*CoupsSuppl=0;
+   				break;
+   		}
+   		
+    	drawRectangle(ecran, 146, 200, 35, 35, 60, 60, 60); //carré gris de la fleche gauche de Taille
+    	drawRectangle(ecran, 390, 200, 35, 35, 60, 60, 60); //carré gris de la fleche droite de Taille
+    	drawRectangle(ecran, 194, 314, 35, 35, 60, 60, 60); //carré gris de la fleche gauche de Difficulté
+    	drawRectangle(ecran, 469, 314, 35, 35, 60, 60, 60); //carré gris de la fleche droite de Difficulté
+    	drawRectangle(ecran, ecran->w/1.55, ecran->h-50, 120, 45, 60, 60, 60); //carré gris Démarrer
+    	drawRectangle(ecran, ecran->w/6, ecran->h-50, 150, 45, 60, 60, 60); //carré gris Quitter
+
+        if(positionmenu_x==0 && positionmenu_y==2) //affichage des rectangles gris en fonction de la position dans le menu
+        	drawRectangle(ecran, ecran->w/6, ecran->h-50, 150, 45, 100, 100, 100);
+        else if(positionmenu_y==2)
+        	drawRectangle(ecran, ecran->w/1.55, ecran->h-50, 120, 45, 100, 100, 100);
+        else if(positionmenu_y==1)
+        	drawRectangle(ecran, ecran->w/10-8, 2*ecran->h/3.2-7, 144, 45, 100, 100, 100);
+        else
+        	drawRectangle(ecran, ecran->w/10-8, ecran->h/2.5-7, 95, 45, 100, 100, 100);
+
+
+        sprintf(txtdiff, "Difficulte   <    %s", niveaudiff);
+
+        position.x = ecran->w/16;
+        position.y = ecran->h/20;
+        SDL_BlitSurface(titre, NULL, ecran, &position);
+
+        position.x = ecran->w/10;
+        position.y = ecran->h/2.5;
+        SDL_BlitSurface(TTF_RenderText_Solid(policetxt, txttaille, couleurtxt), NULL, ecran, &position);
+        position.x = ecran->w-100;
+        SDL_BlitSurface(TTF_RenderText_Solid(policetxt, ">", couleurtxt), NULL, ecran, &position);
+        position.x = ecran->w/7;
+        position.y = ecran->h/2.1;
+        SDL_BlitSurface(TTF_RenderText_Solid(policeinstructions, strinstructions, couleurtxt), NULL, ecran, &position);
+
+        position.x = ecran->w/10;
+        position.y = 2*ecran->h/3.2;
+        SDL_BlitSurface(TTF_RenderText_Solid(policetxt, txtdiff, couleurtxt), NULL, ecran, &position);
+        position.x = ecran->w-20;
+        SDL_BlitSurface(TTF_RenderText_Solid(policetxt, ">", couleurtxt), NULL, ecran, &position);
+
+
+        position.x = ecran->w/5;
+        position.y = ecran->h-45;
+        SDL_BlitSurface(TTF_RenderText_Solid(policetxt, "Demarrer", couleurtxt), NULL, ecran, &position);
+
+        position.x = 2*ecran->w/3;
+        position.y = ecran->h-45;
+        SDL_BlitSurface(TTF_RenderText_Solid(policetxt, "Quitter", couleurtxt), NULL, ecran, &position);
+
+
+
+        SDL_Flip(ecran);
+    }
+    SDL_EnableUNICODE(SDL_DISABLE);  
+
+    TTF_CloseFont(policetitre);
+    TTF_CloseFont(policetxt);
+    return 1;
+}
+
 int getsValue(char* str, int min) {
     int res = 0;
     char *p1, s1[100];
@@ -36,22 +286,13 @@ int getsValue(char* str, int min) {
     }
 }
 
-
-/**
- * \fn SDL_Surface* initSDLwindow(int width, int height)
- * \brief Initialise la fenêtre à l'aide de la SDL
- *
- * \param int width la longeur de la fenetre.
- * \param int height la largeur de la fenetre.
- * \return SDL_Surface* la surface SDL 
- */
-SDL_Surface* initSDLwindow(int width, int height) {
+SDL_Surface* initSDLwindow(int width, int height){
 
     if(SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
         fprintf( stderr, "Video initialization failed: %s\n", SDL_GetError( ) );
         SDL_Quit();
     }
-    SDL_Surface *screen = SDL_SetVideoMode(width, height, 32, SDL_HWSURFACE | SDL_RESIZABLE);
+    SDL_Surface *screen = SDL_SetVideoMode(width, height, 32, SDL_HWSURFACE);
 
     fillScreen(screen, 30, 30, 30);
     SDL_WM_SetCaption("Color Flood Equilibre", NULL);
@@ -60,53 +301,20 @@ SDL_Surface* initSDLwindow(int width, int height) {
     return screen;
 }
 
-
-/**
- * \fn void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, int b)
- * \brief dessine un carrée dans la fenetre 
- *
- * \param SDL_Surface *ecran la surface sur laquelle dessiner
- * \param int px la position X du pixel haut gauche
- * \param int py la position Y du pixel haut gauche
- * \param int size la tailel du carrée à affiché
- * \param int r la composante rouge de la couleur du carrée
- * \param int g la composante verte de la couleur du carrée
- * \param int b la composante bleue  de la couleur du carrée
- */
-void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, int b) {
+void drawRectangle(SDL_Surface *ecran, int px, int py, int sizew, int sizeh, int r, int g, int b) {
     SDL_Rect rect;
     rect.x = px;
     rect.y = py;
-    rect.h = size;
-    rect.w = size;
+    rect.h = sizeh;
+    rect.w = sizew;
     SDL_FillRect(ecran, &rect, SDL_MapRGB(ecran->format, r, g, b));
 }
 
-
-/**
- * \fn void fillScreen(SDL_Surface *ecran, int r, int g, int b)
- * \brief Colorie le "fond" de la fenetre 
- *
- * \param SDL_Surface *ecran la surface SDL
- * \param int r la composante rouge de la couleur du carrée
- * \param int g la composante verte de la couleur du carrée
- * \param int b la composante bleue  de la couleur du carrée
- */
 void fillScreen(SDL_Surface *ecran, int r, int g, int b) {
     SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format, r, g, b));
     SDL_Flip(ecran);
 }
 
-
-/**
- * \fn void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark)
- * \brief affiche la grille sur la fenetre
- *
- * \param Matrix mat la grille
- * \param int size la taille de la grille
- * \param SDL_Surface *ecran la surface SDL
- * \param int dark decallage vers la gauche des couleurs
- */
 void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark) { 
     fillScreen(ecran, 30, 30, 30);
     int sizeToConsider = ecran->w;
@@ -121,27 +329,27 @@ void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark) {
             switch(mat[i][j]) {
                 case 1 :
                     /* RED */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 201-dark, 20-dark, 24-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, rectsize, 201-dark, 20-dark, 24-dark);
                     break;
                 case 2 :
                     /* GREEN */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 77-dark, 142-dark, 21-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, rectsize, 77-dark, 142-dark, 21-dark);
                     break;              
                 case 3 :
                     /* YELLOW */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 194-dark, 143-dark, 20-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, rectsize, 194-dark, 143-dark, 20-dark);
                     break;
                 case 4:
                     /* BLUE */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 45-dark, 85-dark, 220-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, rectsize, 45-dark, 85-dark, 220-dark);
                     break;
                 case 5 :
                     /* MAGENTA */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 116-dark, 76-dark, 112-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, rectsize, 116-dark, 76-dark, 112-dark);
                     break;
                 case 6 :
                     /* CYAN */
-                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, 23-dark, 150-dark, 150-dark);
+                    drawRectangle(ecran,  (j*rectsize) + offsetW,  (i*rectsize) + offsetH, rectsize, rectsize, 23-dark, 150-dark, 150-dark);
                     break;
                 default:
                     printf("error\n");
@@ -152,39 +360,6 @@ void printMatrixSDL(Matrix mat, int size, SDL_Surface *ecran, int dark) {
 }
 
 
-/**
- * \fn void printWin()
- * \brief fonction de fin de partie
- *
- */
-void printWin() {
-    SDL_Event event;
-    int quit = 1;
-    while(quit) {
-        SDL_WaitEvent(&event);
-        switch(event.type) {
-            case SDL_QUIT: 
-                quit = 0; 
-                break;
-            case SDL_MOUSEBUTTONUP: 
-                quit = 0; 
-                break;
-        }
-    }
-}
-
-
-/**
- * \fn int getValueMatrix(int x, int y, Matrix matrix, int size, SDL_Surface *ecran)
- * \brief Retrouve la valeur de la case sous ajacente au clic
- *
- * \param int x position X du clic
- * \param int y position Y du clic
- * \param Matrix mat la grille
- * \param int size la taille de la grille
- * \param SDL_Surface *ecran la surface SDL
- * \return int la valeur de la case
- */
 int getValueMatrix(int x, int y, Matrix matrix, int size, SDL_Surface *ecran) {
     int sizeToConsider = ecran->w;
     if (ecran->w > ecran->h) 
@@ -201,8 +376,7 @@ int getValueMatrix(int x, int y, Matrix matrix, int size, SDL_Surface *ecran) {
 
 
 
-/*void drawRectangle(SDL_Surface *ecran, int px, int py, int size, int r, int g, int b) */
-void affiche_win(SDL_Surface *ecran,int size){
+void affiche_win(SDL_Surface *ecran,int size, int couleur){
     int x = 0,y = 0;
     int sizeToConsider = ecran->w;
     if (ecran->w > ecran->h) 
@@ -214,28 +388,86 @@ void affiche_win(SDL_Surface *ecran,int size){
 
     x = offsetW + 2*sizeSquare;
     y = offsetH + ecran->h/3;
-    for (int i = 0; i < 3; ++i)
-    {
-        drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, 255, 255, 255);
-        drawRectangle(ecran, x+4*sizeSquare, y+i*sizeSquare, sizeSquare, 255, 255, 255);        
-    }
-    drawRectangle(ecran, x+sizeSquare/2+5, y+3*sizeSquare, sizeSquare, 255, 255, 255);   
-    drawRectangle(ecran, x+sizeSquare+5, y+4*sizeSquare, sizeSquare, 255, 255, 255);   
-    drawRectangle(ecran, x+sizeSquare*2, y+3*sizeSquare, sizeSquare, 255, 255, 255);   
-    drawRectangle(ecran, x+sizeSquare*3-5, y+4*sizeSquare, sizeSquare, 255, 255, 255);   
-    drawRectangle(ecran, x+sizeSquare*7/2-5, y+3*sizeSquare, sizeSquare, 255, 255, 255);   
-    drawRectangle(ecran, x+sizeSquare*2, y+2*sizeSquare+12, sizeSquare, 255, 255, 255);   
 
-    for (int i = 0; i < 5; ++i)
-    {
-         drawRectangle(ecran, x+6*sizeSquare, y+i*sizeSquare, sizeSquare, 255, 255, 255);   
-         drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, 255, 255, 255);   
-         drawRectangle(ecran, x+12*sizeSquare, y+i*sizeSquare, sizeSquare, 255, 255, 255);   
-    }
-         drawRectangle(ecran, x+9*sizeSquare, y+sizeSquare, sizeSquare, 255, 255, 255);   
-         drawRectangle(ecran, x+10*sizeSquare, y+2*sizeSquare, sizeSquare, 255, 255, 255);
-         drawRectangle(ecran, x+11*sizeSquare, y+3*sizeSquare, sizeSquare, 255, 255, 255);
+    int varr=0, varg=0, varb=0;
+    int compteurcouleur=0, switchcouleur=0, click=0, r=0, g=0, b=0;
+    SDL_Event event;
 
+    switch(couleur)
+    {
+        case 1 :
+            r=201, g=20, b=24;
+            break;
+        case 2 :
+            r=77, g=142, b=21;
+            break;              
+        case 3 :
+            r=194, g=143, b=20;
+            break;
+        case 4:
+            r=45, g=85, b=220;
+            break;
+        case 5 :
+            r=116, g=76, b=112;
+            break;
+        case 6 :
+            r=23, g=150, b=150;
+            break;
+        default :
+            r=0, g=0, b=0;
+            break;
+    }
+    while(click==0)
+    {
+        if(switchcouleur==0)
+        {
+            varr+=r/30, varg+=g/30, varb+=b/30;
+            compteurcouleur++;
+            if(compteurcouleur==30)
+                switchcouleur=1;
+        }
+        else
+        {
+            varr-=r/30, varg-=g/30, varb-=b/30;
+            compteurcouleur--;
+            if(compteurcouleur==0)
+                switchcouleur=0;
+        }
+        for (int i = 0; i < 3; ++i)
+        {
+            drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);
+            drawRectangle(ecran, x+4*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);        
+        }
+        drawRectangle(ecran, x+sizeSquare/2+5, y+3*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare+5, y+4*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare*2, y+3*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare*3-5, y+4*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare*7/2-5, y+3*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        drawRectangle(ecran, x+sizeSquare*2, y+2*sizeSquare+12, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+
+        for (int i = 0; i < 5; ++i)
+        {
+             drawRectangle(ecran, x+6*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+             drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+             drawRectangle(ecran, x+12*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+        }
+             drawRectangle(ecran, x+9*sizeSquare, y+sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);   
+             drawRectangle(ecran, x+10*sizeSquare, y+2*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);
+             drawRectangle(ecran, x+11*sizeSquare, y+3*sizeSquare, sizeSquare, sizeSquare, 255-varr, 255-varg, 255-varb);
+
+        SDL_Flip(ecran);
+        nanosleep((const struct timespec[]){{0, 10000000L}}, NULL);
+        while(SDL_PollEvent(&event))
+        { 
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                if (event.button.button == SDL_BUTTON_LEFT)
+                    click = 1;
+            }
+            if(event.type==SDL_QUIT)
+                click=1;
+        }
+    }
 }
 
 void affiche_lose(SDL_Surface *ecran,int size){
@@ -246,23 +478,80 @@ void affiche_lose(SDL_Surface *ecran,int size){
     int offset = (sizeToConsider%size)/2;
     int offsetW = (ecran->w - sizeToConsider)/2 + offset/2;
     int offsetH = (ecran->h - sizeToConsider)/2 + offset;
-    int sizeSquare = sizeToConsider/23;
+    int sizeSquare = sizeToConsider/22;
 
     x = offsetW + 2*sizeSquare;
     y = offsetH + ecran->h/3;
 
-    for (int i = 0; i < 7; ++i)
+    int r=0, g=0, b=240;
+    int switchcouleur=0, click=0;
+    SDL_Event event;
+    while(click==0)
     {
-        drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, 0, 0, 0);      
-        drawRectangle(ecran, x+5*sizeSquare, y+i*sizeSquare, sizeSquare, 0, 0, 0);      
-        drawRectangle(ecran, x+10*sizeSquare, y+i*sizeSquare, sizeSquare, 0, 0, 0);      
-    }
+        if(switchcouleur==0)
+        {
+            r+=8;
+            b-=8;
+            if(r>=240)
+                switchcouleur=1;
+        }
+        else if(switchcouleur==1)
+        {
+            g+=8;
+            r-=8;
+            if(g>=240)
+                switchcouleur=2;
+        }
+        else
+        {
+            b+=8;
+            g-=8;
+            if(b>=240)
+                switchcouleur=0;
+        }
+        for (int i = 0; i < 7; ++i)
+        {
+            drawRectangle(ecran, x, y+i*sizeSquare, sizeSquare, sizeSquare, r, g ,b);                   //L
+    
+            drawRectangle(ecran, x+5*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      //O 
+            drawRectangle(ecran, x+8*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, r, g ,b);    
+    
+            drawRectangle(ecran, x+15*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      //E    
+        }
+    
+        for (int i = 0; i < 4; ++i)
+        {
+            drawRectangle(ecran, x+i*sizeSquare, y+6*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      //L
+    
+            drawRectangle(ecran, x+(i+5)*sizeSquare, y, sizeSquare, sizeSquare, r, g ,b);               //0
+            drawRectangle(ecran, x+(i+5)*sizeSquare, y+6*sizeSquare, sizeSquare, sizeSquare, r, g ,b); 
+    
+            drawRectangle(ecran, x+(i+10)*sizeSquare, y, sizeSquare, sizeSquare, r, g ,b);              //S
+            drawRectangle(ecran, x+(i+10)*sizeSquare, y+3*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      
+            drawRectangle(ecran, x+(i+10)*sizeSquare, y+6*sizeSquare, sizeSquare, sizeSquare, r, g ,b);    
+            drawRectangle(ecran, x+10*sizeSquare, y+i*sizeSquare, sizeSquare, sizeSquare, r, g , b);      
+            drawRectangle(ecran, x+13*sizeSquare, y+(i+3)*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      
+    
+            drawRectangle(ecran, x+(i+15)*sizeSquare, y, sizeSquare, sizeSquare, r, g ,b);              //E     
+            drawRectangle(ecran, x+(i+15)*sizeSquare, y+6*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      
+        }
+    
+        for (int i = 0; i < 3; ++i)
+        {
+            drawRectangle(ecran, x+(i+15)*sizeSquare, y+3*sizeSquare, sizeSquare, sizeSquare, r, g ,b);      
+        }
+        SDL_Flip(ecran);
+        nanosleep((const struct timespec[]){{0, 20000000L}}, NULL);
+        while(SDL_PollEvent(&event))
+        { 
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                if (event.button.button == SDL_BUTTON_LEFT)
+                    click = 1;
+            }
+            if(event.type==SDL_QUIT)
+                click=1;
+        }
 
-    for (int i = 0; i < 4; ++i)
-    {
-        drawRectangle(ecran, x+i*sizeSquare, y+7*sizeSquare, sizeSquare, 0, 0, 0);      
-        drawRectangle(ecran, x+(i+5)*sizeSquare, y, sizeSquare, 0, 0, 0);      
-        drawRectangle(ecran, x+(i+5)*sizeSquare, y+7*sizeSquare, sizeSquare, 0, 0, 0);      
     }
-
 }
