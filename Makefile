@@ -24,7 +24,7 @@ CFLAGSTEST = -L $(HOME)/local/lib
 app: $(APP)
 
 $(APP): $(COBJMAIN) $(COBJ)
-	$(CC) $(CFLAGS) -o $(APP) $(COBJMAIN) $(COBJ) `sdl-config --cflags --libs` -lSDL 
+	$(CC) $(CFLAGS) -o $(APP) $(COBJMAIN) $(COBJ) `sdl-config --cflags --libs` -lSDL -lSDL_ttf
 
 $(COBJMAIN): $(CSRC) $(CHDR) $(OBJDIR)
 	$(CC) $(CFLAGS) -o $(OBJDIR)/main.o -c $(SRCDIR)/main.c 
@@ -33,7 +33,7 @@ $(COBJ): $(CSRC) $(CHDR) $(OBJDIR)
 	$(CC) $(CFLAGS) -o $(OBJDIR)/grille.o -c $(SRCDIR)/grille.c
 	$(CC) $(CFLAGS) -o $(OBJDIR)/file.o -c $(SRCDIR)/file.c
 	$(CC) $(CFLAGS) -o $(OBJDIR)/couleur.o -c $(SRCDIR)/couleur.c
-	$(CC) $(CFLAGS) -o $(OBJDIR)/affichage.o -c $(SRCDIR)/affichage.c
+	$(CC) $(CFLAGS) -D_POSIX_C_SOURCE=199309L -o $(OBJDIR)/affichage.o -c $(SRCDIR)/affichage.c
 	$(CC) $(CFLAGS) -o $(OBJDIR)/tree.o -c $(SRCDIR)/tree.c
 
 $(OBJDIR):
@@ -43,7 +43,7 @@ $(OBJDIR):
 test: $(TEST)
 
 $(TEST): $(COBJTEST) $(COBJ)
-	$(CC) $(CFLAGSTEST) -o $(TEST) $(COBJTEST) $(COBJ) `sdl-config --cflags --libs` -lSDL -lcunit
+	$(CC) $(CFLAGSTEST) -o $(TEST) $(COBJTEST) $(COBJ) `sdl-config --cflags --libs` -lSDL -lSDL_ttf -lcunit
 
 $(COBJTEST): $(CSRCTEST) $(CHDRTEST) $(TESTDIR)/$(OBJDIR)
 	$(CC) $(CFLAGS) -o $(TESTDIR)/$(OBJDIR)/main.o -c $(TESTDIR)/main.c

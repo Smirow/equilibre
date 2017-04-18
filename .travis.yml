@@ -3,7 +3,7 @@ language: c
 compiler: gcc
 
 before_install:
-    sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev libsdl1.2-dev
+    sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev libsdl1.2-dev libsdl-ttf2.0-dev
 install:
     make test
 script:
