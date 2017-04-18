@@ -28,7 +28,7 @@ int menu(SDL_Surface *ecran, int *size, int *CoupsSuppl) {
     SDL_EnableUNICODE(SDL_ENABLE);
 
 
-    int continuer=1, quitter=1;
+    int continuer = 1, quitter = 1;
     while (continuer && quitter) {
         SDL_WaitEvent(&event);
         switch(event.type) {
@@ -45,29 +45,29 @@ int menu(SDL_Surface *ecran, int *size, int *CoupsSuppl) {
 	            		break;
 	            	case SDLK_UP:
 	            		positionmenu_y--;
-                        positionmenu_x=0;
-	            		if(positionmenu_y<0)
-	            			positionmenu_y=2;
+                        positionmenu_x = 0;
+	            		if(positionmenu_y < 0)
+	            			positionmenu_y = 2;
     					fillScreen(ecran, rand()%255, rand()%255, rand()%255);
 	            		break;
 	            	case SDLK_DOWN:
 	            		positionmenu_y++;
-                        positionmenu_x=0;
-	            		if(positionmenu_y>2)
-	            			positionmenu_y=0;
+                        positionmenu_x = 0;
+	            		if(positionmenu_y > 2)
+	            			positionmenu_y = 0;
     					fillScreen(ecran, rand()%255, rand()%255, rand()%255);
 	            		break;
 	            	case SDLK_LEFT:
 	            		switch(positionmenu_y) {
 	            			case 0:
 	            				vartaille--;
-	            				if(vartaille<0)
-	            					vartaille=3;
+	            				if(vartaille < 0)
+	            					vartaille = 3;
 	            				break;
 	            			case 1:
 	            				vardiff--;
-	            				if(vardiff<0)
-	            					vardiff=3;
+	            				if(vardiff < 0)
+	            					vardiff = 3;
 	            				break;
 		            		case 2:
 			            		positionmenu_x++;
@@ -80,13 +80,13 @@ int menu(SDL_Surface *ecran, int *size, int *CoupsSuppl) {
 	            		switch(positionmenu_y) {
 	            			case 0:
 	            				vartaille++;
-	            				if(vartaille>3)
-	            					vartaille=0;
+	            				if(vartaille > 3)
+	            					vartaille = 0;
 	            				break;
 	            			case 1:
 	            				vardiff++;
-	            				if(vardiff>3)
-	            					vardiff=0;
+	            				if(vardiff > 3)
+	            					vardiff = 0;
 	            				break;
 		            		case 2:
 			            		positionmenu_x++;
@@ -106,8 +106,8 @@ int menu(SDL_Surface *ecran, int *size, int *CoupsSuppl) {
                         {   
                             if(lgrstr<2) 
                             {
-                                strtaille[lgrstr]=(char)event.key.keysym.unicode;
-                                strtaille[lgrstr+1]=0;
+                                strtaille[lgrstr] = (char)event.key.keysym.unicode;
+                                strtaille[lgrstr+1] = 0;
                             }
                             fillScreen(ecran, rand()%255, rand()%255, rand()%255);
                         }
@@ -162,29 +162,29 @@ int menu(SDL_Surface *ecran, int *size, int *CoupsSuppl) {
 
         switch(vartaille) {
             case 0:
-                *size=12;
+                *size = 12;
                 break;
             case 1:
-                *size=18;
+                *size = 18;
                 break;
             case 2:
-                *size=24;
+                *size = 24;
                 break;
             default:
                 break;
         }
 
-        if(!strcmp(strtaille, "") && vartaille==3) {
+        if(!strcmp(strtaille, "") && vartaille == 3) {
             sprintf(txttaille, "Taille   <   Personnalisee"); //à blit
             strcpy(strinstructions, "Entrez une taille entre 2*2 et 24*24");
         }
-        else if(vartaille!=3) {
+        else if(vartaille != 3) {
             sprintf(txttaille, "Taille   <         %d*%d", *size, *size);
             strcpy(strinstructions, "");
         }
         else
         {
-            if(atoi(strtaille)>24)
+            if(atoi(strtaille) > 24)
                 *size=24;
             else
                 *size=atoi(strtaille);
@@ -220,11 +220,11 @@ int menu(SDL_Surface *ecran, int *size, int *CoupsSuppl) {
     	drawRectangle(ecran, ecran->w/1.55, ecran->h-50, 120, 45, 60, 60, 60); //carré gris Démarrer
     	drawRectangle(ecran, ecran->w/6, ecran->h-50, 150, 45, 60, 60, 60); //carré gris Quitter
 
-        if(positionmenu_x==0 && positionmenu_y==2) //affichage des rectangles gris en fonction de la position dans le menu
+        if(positionmenu_x == 0 && positionmenu_y == 2) //affichage des rectangles gris en fonction de la position dans le menu
         	drawRectangle(ecran, ecran->w/6, ecran->h-50, 150, 45, 100, 100, 100);
-        else if(positionmenu_y==2)
+        else if(positionmenu_y == 2)
         	drawRectangle(ecran, ecran->w/1.55, ecran->h-50, 120, 45, 100, 100, 100);
-        else if(positionmenu_y==1)
+        else if(positionmenu_y == 1)
         	drawRectangle(ecran, ecran->w/10-8, 2*ecran->h/3.2-7, 144, 45, 100, 100, 100);
         else
         	drawRectangle(ecran, ecran->w/10-8, ecran->h/2.5-7, 95, 45, 100, 100, 100);

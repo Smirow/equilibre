@@ -36,13 +36,13 @@ int main() {
 
     size = /*getsValue("Entrez la taille de la grille: ", 1)*/ 12;
     maxCoups = /*getsValue("Entrez un nombre maximum de coups: ", 1)*/ 15;
-	nbCoupsSolveur=15;
+	nbCoupsSolveur = 15;
     SDL_Surface *screen = initSDLwindow(504, 504);
 
     if(menu(screen, &size, &CoupsSuppl))
     {
-    	if(size==1)	//empeche le tableau d'être de taille 1*1
-    		size=2;
+    	if(size == 1)	//empeche le tableau d'être de taille 1*1
+    		size = 2;
     	
         screen = SDL_SetVideoMode(504, 504, 32, SDL_HWSURFACE | SDL_RESIZABLE); //pour pouvoir redimensionner la fenetre apres le menu
 
@@ -50,10 +50,10 @@ int main() {
 	    Matrix matrix = initMatrix(size);
 	    randomMatrix(matrixNoGame, size, 6);
 	    copyMatrix(matrix, matrixNoGame, size);
-
+        nbCoupsSolveur = createStandardPossibleTree(matrix, size, 150);
 	    printMatrixSDL(matrix, size, screen, 0);
 	    
-	    maxCoups=CoupsSuppl+nbCoupsSolveur;
+	    maxCoups = CoupsSuppl + nbCoupsSolveur;
 
 	    SDL_Event event;
 	    char buf[100];
