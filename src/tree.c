@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include "../headers/file.h"
 #include "../headers/grille.h"
@@ -125,10 +126,72 @@ void copyMatrixIntoNode(NTree node, Matrix matrixToCopy, int size) {
     }
 }
 
+TREE_FIFO* initTreeFIFO() {
+	TREE_FIFO *file = malloc(sizeof(FIFO));
+	file->first = NULL;
+	file->last = NULL;
+	file->size = 0;
+	return file;
+}
+
+int emptyTreeFIFO(TREE_FIFO *f) {
+	if (f->size == 0){
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
+void constructTreeFIFO(TREE_FIFO *f, NTree node) {
+	cell *c;
+	c = (cell *)malloc(sizeof(cell));
+	c->tree = node;
+	if (emptyTreeFIFO(f)){
+		f->first = c;
+	}
+	else {
+		f->last->next = c;
+	}
+	f->last = c;
+	f->size++;
+}
+
+NTree defileTree(TREE_FIFO *f){
+	NTree tree = TREENULL;
+ 	if (f->size != 0){
+		cell *c = f->first;
+		tree = f->first->tree;
+ 		f->first = f->first->next;
+ 		f->size--;
+		free(c);
+ 	}
+ 	return tree;
+ }
+
+void freeTreeFIFO(TREE_FIFO *f) {
+	while(!emptyTreeFIFO(f)) {
+		defileTree(f);
+	}
+	free(f);
+}
+
+
+ void printTreeFIFO(TREE_FIFO *suite) {
+	cell *cel;
+	cel = suite->first;
+	for(int i = 0; i < suite->size; ++i){
+		printf("[%d] -> ", cel->tree->val);
+		cel = cel->next;
+	}
+	printf("\n");
+}
+
+
 int playMatrixIntoSon(NTree node, int oldCCsize) {
     if (!node->matrix || !node->matrixSize || !(node->val >= 1 && node->val <= 6)) return 0;
     node->CCsize = changeCC(node->matrix, node->val, node->matrixSize);
-    if (node->CCsize == oldCCsize) return 0;
+    if (node->CCsize <= oldCCsize) return 0;
     return 1;
 }
 
@@ -141,8 +204,40 @@ int createStandardPossibleSons(NTree node) {
     return 0;
 }
 
+void print_sol_tree(NTree tree) {
+    int temp = tree->nbSon - 1;
+    switch(tree->val) {
+        case 1:
+            printf(RED "%1sR", "");
+            break;              
+        case 2:
+            printf(GREEN "%1sG", "");
+            break;
+        case 3:
+            printf(YELLOW "%1sY", "");
+            break;
+        case 4:
+            printf(BLUE "%1sB", "");
+            break;
+        case 5:
+            printf(MAGENTA "%1sM", "");
+            break;
+        case 6:
+            printf(CYAN "%1sC", "");
+            break;
+        default:
+            printf("Erreur couleur");
+            exit(1);     
+    }
+    printf(COLOR_RESET);
+    if (temp < 0) printf("\n");
+    if (temp >= 0) {
+        printf(" -> ");
+        print_sol_tree(tree->tabSon[temp]);
+    }
+}
 
-void createStandardPossibleTreeRec(NTree node, int Depth, int* maxDepth) {
+void createStandardPossibleTreeRec(NTree tree, NTree node, int Depth, int* maxDepth) {
     if (Depth < *maxDepth) {
         createStandardPossibleSons(node);
         int temp = node->nbSon - 1;
@@ -151,87 +246,99 @@ void createStandardPossibleTreeRec(NTree node, int Depth, int* maxDepth) {
             if (playMatrixIntoSon(node->tabSon[i], node->CCsize) && Depth < *maxDepth) {
                 if (node->tabSon[i]->CCsize == node->matrixSize * node->matrixSize) {
                     *maxDepth = Depth;
-                    printf("Better solution in %d\n", *maxDepth);
+                    printf("Found solution in %d\n", *maxDepth);
+                    print_sol_tree(tree);
+                    printf("- - - - - - -  \n");
                 }
-              createStandardPossibleTreeRec(node->tabSon[i], Depth + 1, maxDepth);
+              createStandardPossibleTreeRec(tree, node->tabSon[i], Depth + 1, maxDepth);
             }
             removeSon(node, i);
         }
+        // printNTree(tree);
+        // printf("- - - - - - -  \n");
     }
 }
 
-Matrix chooseColor(Matrix matrix, int size) {
-    Matrix colors = initMatrixNonRegular(6, 2);
-    colors[0][0] = 1;
-    colors[1][0] = 2;
-    colors[2][0] = 3;
-    colors[3][0] = 4;
-    colors[4][0] = 5;
-    colors[5][0] = 6;
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            switch(matrix[i][j]) {
-                case 1: colors[0][1]++; break;
-                case 2: colors[1][1]++; break;
-                case 3: colors[2][1]++; break;
-                case 4: colors[3][1]++;  break;
-                case 5: colors[4][1]++;  break;
-                case 6: colors[5][1]++;  break;
+void BFSPossibleTreeRec(NTree node, int* maxDepth) {
+    int Depth = 0;
+    TREE_FIFO *f = initTreeFIFO();
+    constructTreeFIFO(f, node);
+    while(!emptyTreeFIFO(f) && Depth < *maxDepth) {
+        NTree s = defileTree(f);
+        //printf("%d\n", s->val);
+        if (s->CCsize == s->matrixSize * s->matrixSize && Depth < *maxDepth ) {
+            *maxDepth = Depth;
+            printf("Better solution in %d\n", *maxDepth);
+        }
+        createStandardPossibleSons(s);
+        int temp = s->nbSon - 1;
+        for (int i = temp; i >= 0; i--) {
+            copyMatrixIntoNode(s->tabSon[i], s->matrix, s->matrixSize);
+            if (playMatrixIntoSon(s->tabSon[i], s->CCsize) && Depth < *maxDepth) {
+                if (s->tabSon[i]->CCsize == s->matrixSize * s->matrixSize) {
+                    *maxDepth = Depth;
+                    printf("Better solution in %d\n", *maxDepth);
+                }
+                constructTreeFIFO(f, s->tabSon[i]);
             }
         }
+        Depth++;
     }
-    return colors;
 }
-
-
-void triBullesColors(Matrix matrix, int row){
-  int tmp = 0;
-  for (int i = row; i >= 0; i--){
-    for (int j = 0; j < i-1; j++) {
-      if (matrix[j+1][1] < matrix[j][1]){
-        tmp = matrix[j][1];
-        matrix[j][1] = matrix[j+1][1];
-        matrix[j+1][1] = tmp;
-      }
-    }
-  }
-}
-
-void printColors(Matrix matrix, int col, int row) {
-    for (int i = 0; i < row; i++) {
-        for (int j = 0; j < col - 1; j++) {
-            printf("[%d %d]", matrix[i][j], matrix[i][j+1]);
-        }
-    }
-    printf("\n");
-}
-
 
 void createStandardPossibleTree(Matrix matrix, int matrixSize, int MAXDepth) {
     NTree tree = newNTree(matrix[0][0]);
     copyMatrixIntoNode(tree, matrix, matrixSize);
     int* maxDepth = &MAXDepth;
-    createStandardPossibleTreeRec(tree, 1, maxDepth);
+    createStandardPossibleTreeRec(tree, tree, 1, maxDepth);
     printf("Best solution in %d\n", *maxDepth);
     freeTree(tree);
 }
 
 
 
+void basicSolver(Matrix matrix, int size, FIFO* f, int OldCC, int depth, int *maxDepth) {
+    if (depth < *maxDepth) {
+        int CCSize = 0;
+        Matrix g2 = initMatrix(size);
+        for (int i = 1; i <= 6; i++) {
+            if (i != matrix[0][0]) {
+                copyMatrix(g2, matrix, size);
+                if ((CCSize = changeCC(g2, i, size)) > OldCC) {
+                    coordonnees coord = modifcoord(i, i);
+                    constructeur(f, coord);
+                    if (CCSize == size * size) {
+                        *maxDepth = f->taille;
+                        printf("Found Solution in %d: ", depth);
+                        affiche(f);
+                    }
+                    else {
+                        basicSolver(g2, size, f, CCSize, depth + 1, maxDepth);
+                    }
+                    defile(f);
+                }
+            }
+        }
+    }
+}
+
+
+
+
 
 /* TEST, uncomment and make to test this module */
-
+/*
 int main() {
     srand(time(NULL));
-    NTree A, B;
-    flux* f = openFile("./test.txt");
 
-    int size = checkFileFormat(f);
-    Matrix matrix = initFromFile(f);
+    int size = SIZE;
+    Matrix matrix = initMatrix(size);
+    randomMatrix(matrix, size, 6);
+
     printMatrix(matrix, size);
-    Matrix colors = chooseColor(matrix, size);
-    triBullesColors(colors, 6);
-    printColors(colors, 2, 6);
-    createStandardPossibleTree(matrix, size, 20);
+
+
+    createStandardPossibleTree(matrix, size, 150);
     freeMatrix(matrix, size);
 }
+*/
