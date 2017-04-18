@@ -286,13 +286,14 @@ void BFSPossibleTreeRec(NTree node, int* maxDepth) {
     }
 }
 
-void createStandardPossibleTree(Matrix matrix, int matrixSize, int MAXDepth) {
+int createStandardPossibleTree(Matrix matrix, int matrixSize, int MAXDepth) {
     NTree tree = newNTree(matrix[0][0]);
     copyMatrixIntoNode(tree, matrix, matrixSize);
     int* maxDepth = &MAXDepth;
     createStandardPossibleTreeRec(tree, tree, 1, maxDepth);
     printf("Best solution in %d\n", *maxDepth);
     freeTree(tree);
+    return *maxDepth;
 }
 
 
@@ -336,7 +337,6 @@ int main() {
     randomMatrix(matrix, size, 6);
 
     printMatrix(matrix, size);
-
 
     createStandardPossibleTree(matrix, size, 150);
     freeMatrix(matrix, size);
