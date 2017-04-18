@@ -6,6 +6,7 @@
 
 #include "../headers/couleur.h"
 #include "../headers/affichage.h"
+#include "../headers/tree.h"
 
 int main() {
     srand(time(NULL));

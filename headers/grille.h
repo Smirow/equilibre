@@ -37,4 +37,6 @@ void randomMatrix(Matrix matrix, int size, int N);
 Matrix initFromFile(flux* f);
 void copyMatrix(Matrix dest, Matrix src, int size);
 
+Matrix initMatrixNonRegular(int row, int col);
+
 #endif

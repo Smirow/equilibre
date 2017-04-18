@@ -30,6 +30,15 @@ Matrix initMatrix(int size) {
     return matrix;
 }
 
+Matrix initMatrixNonRegular(int row, int col) {
+    Matrix matrix;
+    matrix = (int **) calloc(row, sizeof(int*));
+    for (int m = 0; m < row; m++) {
+        matrix[m] = (int *) calloc(col, sizeof(int));
+    }
+    return matrix;
+}
+
 
 /**
  * \fn void freeMatrix(Matrix matrix, int size)
