@@ -8,7 +8,13 @@
 #include "../headers/couleur.h"
 #include "../headers/tree.h"
 
-
+/**
+ * \fn NTree newNTree(int val)
+ * \brief Creation d'un N arbre
+ *
+ * \param int val valeur du noeud.
+ * \return NTree l'arbre créé.
+ */
 NTree newNTree(int val) {
     NNode *n;
     n = (NNode*)malloc(sizeof(NNode));
@@ -21,11 +27,25 @@ NTree newNTree(int val) {
 }
 
 
+/**
+ * \fn int nTreeNull(NTree a)
+ * \brief Verifie si un NTree est null
+ *
+ * \param NTree a l'arbre
+ * \return int bool
+ */
 int nTreeNull(NTree a) {
     return a == TREENULL;
 }
 
-
+/**
+ * \fn NTree addSon(NTree a, NTree son)
+ * \brief ajoute un fils a l'arbre.
+ *
+ * \param NTree a l'arbre parent
+ * \param NTree son l'arbre fils
+ * \return NTree l'arbre
+ */
 NTree addSon(NTree a, NTree son) {
     if (a->nbSon == NBSON) return a;
     a->nbSon++;
@@ -33,7 +53,10 @@ NTree addSon(NTree a, NTree son) {
     return a;
 }
 
-
+/**
+ * \fn void freeNode(NTree node)
+ * \brief liberation memoire d'un noeud
+ */
 void freeNode(NTree node) {
     if (node->matrix) {
         freeMatrix(node->matrix, node->matrixSize);
@@ -43,7 +66,12 @@ void freeNode(NTree node) {
     free(node);
 }
 
-
+/**
+ * \fn void forceDeleteNTree(NTree tree)
+ * \brief force la suppression d'un arbre
+ *
+ * \param NTree tree l'arbre 
+ */
 void forceDeleteNTree(NTree tree) {
     if (tree->nbSon == 0) {
         freeNode(tree);
@@ -58,7 +86,13 @@ void forceDeleteNTree(NTree tree) {
     }
 }
 
-
+/**
+ * \fn void truncateTree(NTree tree, int level)
+ * \brief force la suppression d'un arbre à un certain noveau
+ *
+ * \param NTree tree l'arbre parent
+ * \param int level le niveau de suppresion
+ */
 void truncateTree(NTree tree, int level) {
     if (level == -1) {
         forceDeleteNTree(tree);
@@ -77,12 +111,20 @@ void truncateTree(NTree tree, int level) {
     }
 }
 
-
+/**
+ * \fn void freeTree(NTree root)
+ * \brief liberation mémoire d'un arbre
+ *
+ */
 void freeTree(NTree root) {
     truncateTree(root, -1);
 }
 
-
+/**
+ * \fn void printNTreeRec(NTree root, int p)
+ * \brief affiche en format DOT l'arbre recursif
+ *
+ */
 void printNTreeRec(NTree root, int p) {
     printf("n%d [label=%d];\n", p, root->val);
     for (int i = 0; i < root->nbSon; i++) {
@@ -91,12 +133,22 @@ void printNTreeRec(NTree root, int p) {
     }
 }
 
-
+/**
+ * \fn void printNTree(NTree root)
+ * \brief affiche en format DOT l'arbre
+ *
+ */
 void printNTree(NTree root) {
     printNTreeRec(root, 0);
 }
 
-
+/**
+ * \fn void removeSon(NTree father, int indice)
+ * \brief supprime le fils d'un noeud
+ *
+ * \param NTree father le noeud parent
+ * \param int indice l'indice du fils' fils
+ */
 void removeSon(NTree father, int indice) {
     freeTree(father->tabSon[indice]);
     if (indice < father->nbSon - 1) {
@@ -108,7 +160,14 @@ void removeSon(NTree father, int indice) {
     father->nbSon--;
 }
 
-
+/**
+ * \fn void copyMatrixIntoNode(NTree node, Matrix matrixToCopy, int size)
+ * \brief copie dynamiquement la matrice dans le noeud
+ *
+ * \param NTree node le noeud 
+ * \param Matrix matrixToCopy la matrice à copier
+ * \param int size la taille de la matrice carrée
+ */
 void copyMatrixIntoNode(NTree node, Matrix matrixToCopy, int size) {
     if (node->matrix && node->matrixSize == size) {      
         copyMatrix(node->matrix, matrixToCopy, size);
@@ -126,6 +185,7 @@ void copyMatrixIntoNode(NTree node, Matrix matrixToCopy, int size) {
     }
 }
 
+/* INUTILE 
 TREE_FIFO* initTreeFIFO() {
 	TREE_FIFO *file = malloc(sizeof(FIFO));
 	file->first = NULL;
@@ -188,6 +248,68 @@ void freeTreeFIFO(TREE_FIFO *f) {
 }
 
 
+void BFSPossibleTreeRec(NTree node, int* maxDepth) {
+    int Depth = 0;
+    TREE_FIFO *f = initTreeFIFO();
+    constructTreeFIFO(f, node);
+    while(!emptyTreeFIFO(f) && Depth < *maxDepth) {
+        NTree s = defileTree(f);
+        //printf("%d\n", s->val);
+        if (s->CCsize == s->matrixSize * s->matrixSize && Depth < *maxDepth ) {
+            *maxDepth = Depth;
+            printf("Better solution in %d\n", *maxDepth);
+        }
+        createStandardPossibleSons(s);
+        int temp = s->nbSon - 1;
+        for (int i = temp; i >= 0; i--) {
+            copyMatrixIntoNode(s->tabSon[i], s->matrix, s->matrixSize);
+            if (playMatrixIntoSon(s->tabSon[i], s->CCsize) && Depth < *maxDepth) {
+                if (s->tabSon[i]->CCsize == s->matrixSize * s->matrixSize) {
+                    *maxDepth = Depth;
+                    printf("Better solution in %d\n", *maxDepth);
+                }
+                constructTreeFIFO(f, s->tabSon[i]);
+            }
+        }
+        Depth++;
+    }
+}
+
+void basicSolver(Matrix matrix, int size, FIFO* f, int OldCC, int depth, int *maxDepth) {
+    if (depth < *maxDepth) {
+        int CCSize = 0;
+        Matrix g2 = initMatrix(size);
+        for (int i = 1; i <= 6; i++) {
+            if (i != matrix[0][0]) {
+                copyMatrix(g2, matrix, size);
+                if ((CCSize = changeCC(g2, i, size)) > OldCC) {
+                    coordonnees coord = modifcoord(i, i);
+                    constructeur(f, coord);
+                    if (CCSize == size * size) {
+                        *maxDepth = f->taille;
+                        printf("Found Solution in %d: ", depth);
+                        affiche(f);
+                    }
+                    else {
+                        basicSolver(g2, size, f, CCSize, depth + 1, maxDepth);
+                    }
+                    defile(f);
+                }
+            }
+        }
+    }
+}
+*/
+
+/**
+ * \fn int playMatrixIntoSon(NTree node, int oldCCsize)
+ * \brief joue la matrice du noeud
+ *
+ * \param NTree node le noeud 
+ * \param int oldCCsize la taille de la CC avant de jouer
+ * \param int size la taille de la matrice carrée
+ * \return int bool
+ */
 int playMatrixIntoSon(NTree node, int oldCCsize) {
     if (!node->matrix || !node->matrixSize || !(node->val >= 1 && node->val <= 6)) return 0;
     node->CCsize = changeCC(node->matrix, node->val, node->matrixSize);
@@ -195,6 +317,13 @@ int playMatrixIntoSon(NTree node, int oldCCsize) {
     return 1;
 }
 
+/**
+ * \fn int createStandardPossibleSons(NTree node)
+ * \brief creer les fils standard pour un noeud
+ *
+ * \param NTree node le noeud 
+ * \return int bool
+ */
 int createStandardPossibleSons(NTree node) {
     if (node->val >= 1 && node->val <= 6 && node->nbSon == 0) {
         for (int i = 1; i <= 6; i++)
@@ -204,6 +333,12 @@ int createStandardPossibleSons(NTree node) {
     return 0;
 }
 
+/**
+ * \fn void print_sol_tree(NTree tree)
+ * \brief affiche la solution de l'arbre solution
+ *
+ * \param NTree tree le noeud 
+ */
 void print_sol_tree(NTree tree) {
     int temp = tree->nbSon - 1;
     switch(tree->val) {
@@ -237,6 +372,15 @@ void print_sol_tree(NTree tree) {
     }
 }
 
+/**
+ * \fn void createStandardPossibleTreeRec(NTree tree, NTree node, int Depth, int* maxDepth)
+ * \brief solveur recursif
+ *
+ * \param NTree node l'arbre des possibilités
+ * \param NTree node le noeud actuellement joué
+ * \param int Depth la profondeur
+ * \param int* maxDepth la profondeur max
+ */
 void createStandardPossibleTreeRec(NTree tree, NTree node, int Depth, int* maxDepth) {
     if (Depth < *maxDepth) {
         createStandardPossibleSons(node);
@@ -259,33 +403,16 @@ void createStandardPossibleTreeRec(NTree tree, NTree node, int Depth, int* maxDe
     }
 }
 
-void BFSPossibleTreeRec(NTree node, int* maxDepth) {
-    int Depth = 0;
-    TREE_FIFO *f = initTreeFIFO();
-    constructTreeFIFO(f, node);
-    while(!emptyTreeFIFO(f) && Depth < *maxDepth) {
-        NTree s = defileTree(f);
-        //printf("%d\n", s->val);
-        if (s->CCsize == s->matrixSize * s->matrixSize && Depth < *maxDepth ) {
-            *maxDepth = Depth;
-            printf("Better solution in %d\n", *maxDepth);
-        }
-        createStandardPossibleSons(s);
-        int temp = s->nbSon - 1;
-        for (int i = temp; i >= 0; i--) {
-            copyMatrixIntoNode(s->tabSon[i], s->matrix, s->matrixSize);
-            if (playMatrixIntoSon(s->tabSon[i], s->CCsize) && Depth < *maxDepth) {
-                if (s->tabSon[i]->CCsize == s->matrixSize * s->matrixSize) {
-                    *maxDepth = Depth;
-                    printf("Better solution in %d\n", *maxDepth);
-                }
-                constructTreeFIFO(f, s->tabSon[i]);
-            }
-        }
-        Depth++;
-    }
-}
 
+/**
+ * \fn int createStandardPossibleTree(Matrix matrix, int matrixSize, int MAXDepth)
+ * \brief solveur
+ *
+ * \param Matrix matrix la grille de jeu
+ * \param int matrixSize la taille de la grille
+ * \param int MAXDepth la profondeur max
+ * \return int le nombre de coups minimum
+ */
 int createStandardPossibleTree(Matrix matrix, int matrixSize, int MAXDepth) {
     NTree tree = newNTree(matrix[0][0]);
     copyMatrixIntoNode(tree, matrix, matrixSize);
@@ -296,32 +423,6 @@ int createStandardPossibleTree(Matrix matrix, int matrixSize, int MAXDepth) {
     return *maxDepth;
 }
 
-
-
-void basicSolver(Matrix matrix, int size, FIFO* f, int OldCC, int depth, int *maxDepth) {
-    if (depth < *maxDepth) {
-        int CCSize = 0;
-        Matrix g2 = initMatrix(size);
-        for (int i = 1; i <= 6; i++) {
-            if (i != matrix[0][0]) {
-                copyMatrix(g2, matrix, size);
-                if ((CCSize = changeCC(g2, i, size)) > OldCC) {
-                    coordonnees coord = modifcoord(i, i);
-                    constructeur(f, coord);
-                    if (CCSize == size * size) {
-                        *maxDepth = f->taille;
-                        printf("Found Solution in %d: ", depth);
-                        affiche(f);
-                    }
-                    else {
-                        basicSolver(g2, size, f, CCSize, depth + 1, maxDepth);
-                    }
-                    defile(f);
-                }
-            }
-        }
-    }
-}
 
 
 
