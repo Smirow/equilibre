@@ -45,3 +45,5 @@ int createStandardPossibleSons(NTree node);
 int createStandardPossibleSonsBis(NTree node, Matrix matrix);
 void createStandardPossibleTreeRec(NTree tree, NTree node, int Depth, int* maxDepth);
 int createStandardPossibleTree(Matrix matrix, int matrixSize, int MAXDepth);
+void createStandardPossibleTreeRecOpt(NTree treeSol, NTree node, int Depth, int* maxDepth);
+int createStandardPossibleTreeOpt(Matrix matrix, int matrixSize, int MAXDepth);

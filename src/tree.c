@@ -424,7 +424,43 @@ int createStandardPossibleTree(Matrix matrix, int matrixSize, int MAXDepth) {
 }
 
 
+void createStandardPossibleTreeRecOpt(NTree treeSol, NTree node, int Depth, int* maxDepth) {
+    if (Depth < *maxDepth) {
+        int intMaxSon = 0, maxCC = 1;
+        createStandardPossibleSons(node);
+        int temp = node->nbSon - 1;
+        for (int i = temp; i >= 0; i--) {
+            copyMatrixIntoNode(node->tabSon[i], node->matrix, node->matrixSize);  
+            if (playMatrixIntoSon(node->tabSon[i], node->CCsize) && Depth < *maxDepth) {
+                if (node->tabSon[i]->CCsize == node->matrixSize * node->matrixSize) {
+                    *maxDepth = Depth;
+                    intMaxSon = i;
+                    maxCC = node->tabSon[i]->CCsize;
+                    break;
+                }
+                else if (node->tabSon[i]->CCsize > maxCC) {
+                    intMaxSon = i;
+                    maxCC = node->tabSon[i]->CCsize;
+                }
+            }
+        }
+        NTree played = newNTree(node->tabSon[intMaxSon]->val);
+        addSon(treeSol, played);
+        createStandardPossibleTreeRecOpt(played, node->tabSon[intMaxSon], Depth + 1, maxDepth);
+    }
+}
 
+int createStandardPossibleTreeOpt(Matrix matrix, int matrixSize, int MAXDepth) {
+    NTree treeSol = newNTree(matrix[0][0]);
+    NTree tree = newNTree(matrix[0][0]);
+    copyMatrixIntoNode(tree, matrix, matrixSize);
+    int* maxDepth = &MAXDepth;
+    createStandardPossibleTreeRecOpt(treeSol, tree, 1, maxDepth);
+    print_sol_tree(treeSol);
+    printf("Best heuristic solution in %d\n", *maxDepth);
+    freeTree(tree);
+    return *maxDepth;
+}
 
 
 
@@ -439,7 +475,7 @@ int main() {
 
     printMatrix(matrix, size);
 
-    createStandardPossibleTree(matrix, size, 150);
+    createStandardPossibleTreeOpt(matrix, size, 150);
     freeMatrix(matrix, size);
 }
 */

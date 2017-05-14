@@ -50,7 +50,7 @@ int main() {
 	    Matrix matrix = initMatrix(size);
 	    randomMatrix(matrixNoGame, size, 6);
 	    copyMatrix(matrix, matrixNoGame, size);
-        nbCoupsSolveur = createStandardPossibleTree(matrix, size, 150);
+        nbCoupsSolveur = createStandardPossibleTreeOpt(matrix, size, 150);
 	    printMatrixSDL(matrix, size, screen, 0);
 	    
 	    maxCoups = CoupsSuppl + nbCoupsSolveur;
