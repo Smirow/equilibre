@@ -450,6 +450,18 @@ void createStandardPossibleTreeRecOpt(NTree treeSol, NTree node, int Depth, int*
     }
 }
 
+int createStandardPossibleTreeOptSecond(Matrix matrix, int matrixSize, int MAXDepth) {
+    NTree treeSol = newNTree(matrix[0][0]);
+    NTree tree = newNTree(matrix[0][0]);
+    copyMatrixIntoNode(tree, matrix, matrixSize);
+    int* maxDepth = &MAXDepth;
+    createStandardPossibleTreeRecOptSecond(treeSol, tree, 1, maxDepth);
+    print_sol_tree(treeSol);
+    printf("Best heuristic solution in %d\n", *maxDepth);
+    freeTree(tree);
+    return *maxDepth;
+}
+
 int createStandardPossibleTreeOpt(Matrix matrix, int matrixSize, int MAXDepth) {
     NTree treeSol = newNTree(matrix[0][0]);
     NTree tree = newNTree(matrix[0][0]);
@@ -460,6 +472,56 @@ int createStandardPossibleTreeOpt(Matrix matrix, int matrixSize, int MAXDepth) {
     printf("Best heuristic solution in %d\n", *maxDepth);
     freeTree(tree);
     return *maxDepth;
+}
+
+void createStandardPossibleTreeRecOptSecond(NTree treeSol, NTree node, int Depth, int* maxDepth) {
+    if (Depth < *maxDepth) {
+        int intMaxSon = 0, intMaxSonSecond = 0, maxCC = 1, secondPlayed = 1;
+        createStandardPossibleSons(node);
+        int temp = node->nbSon - 1;
+        for (int i = temp; i >= 0; i--) {
+            copyMatrixIntoNode(node->tabSon[i], node->matrix, node->matrixSize);  
+            if (playMatrixIntoSon(node->tabSon[i], node->CCsize) && Depth < *maxDepth) {
+                if (node->tabSon[i]->CCsize == node->matrixSize * node->matrixSize) {
+                    secondPlayed = 0;
+                    *maxDepth = Depth;
+                    intMaxSon = i;
+                    maxCC = node->tabSon[i]->CCsize;
+                    break;
+                }
+                createStandardPossibleSons(node->tabSon[i]);
+                int tempSecond = node->tabSon[i]->nbSon - 1;
+                for (int j = tempSecond; j >= 0; j--) {
+                    copyMatrixIntoNode(node->tabSon[i]->tabSon[j], node->tabSon[i]->matrix, node->tabSon[i]->matrixSize);  
+                    if (playMatrixIntoSon(node->tabSon[i]->tabSon[j], node->tabSon[i]->CCsize) && Depth < *maxDepth) {
+                        if (node->tabSon[i]->CCsize == node->tabSon[i]->matrixSize * node->tabSon[i]->matrixSize) {
+                            *maxDepth = Depth;
+                            intMaxSon = i;
+                            intMaxSonSecond = j;
+                            maxCC = node->tabSon[i]->tabSon[j]->CCsize;
+                            break;
+                        }
+                        else if (node->tabSon[i]->tabSon[j]->CCsize > maxCC) {
+                            intMaxSon = i;
+                            intMaxSonSecond = j;
+                            maxCC = node->tabSon[i]->tabSon[j]->CCsize;
+                        }
+                    }
+                }
+            }
+        }
+        NTree played = newNTree(node->tabSon[intMaxSon]->val);
+        if (secondPlayed) {
+            NTree playedSecond = newNTree(node->tabSon[intMaxSon]->tabSon[intMaxSonSecond]->val); 
+            addSon(played, playedSecond);
+            addSon(treeSol, played);
+            createStandardPossibleTreeRecOpt(playedSecond, node->tabSon[intMaxSon]->tabSon[intMaxSonSecond], Depth + 2, maxDepth);
+        }
+        else {
+            addSon(treeSol, played);
+            createStandardPossibleTreeRecOpt(played, node->tabSon[intMaxSon]->tabSon[intMaxSonSecond], Depth + 1, maxDepth);
+        }
+    }
 }
 
 

@@ -51,6 +51,7 @@ int main() {
 	    randomMatrix(matrixNoGame, size, 6);
 	    copyMatrix(matrix, matrixNoGame, size);
         nbCoupsSolveur = createStandardPossibleTreeOpt(matrix, size, 150);
+		printf("SOL STYLE %d \n", createStandardPossibleTreeOptSecond(matrix, size, 150));
 	    printMatrixSDL(matrix, size, screen, 0);
 	    
 	    maxCoups = CoupsSuppl + nbCoupsSolveur;

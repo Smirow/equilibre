@@ -47,3 +47,5 @@ void createStandardPossibleTreeRec(NTree tree, NTree node, int Depth, int* maxDe
 int createStandardPossibleTree(Matrix matrix, int matrixSize, int MAXDepth);
 void createStandardPossibleTreeRecOpt(NTree treeSol, NTree node, int Depth, int* maxDepth);
 int createStandardPossibleTreeOpt(Matrix matrix, int matrixSize, int MAXDepth);
+int createStandardPossibleTreeOptSecond(Matrix matrix, int matrixSize, int MAXDepth);
+void createStandardPossibleTreeRecOptSecond(NTree treeSol, NTree node, int Depth, int* maxDepth);
